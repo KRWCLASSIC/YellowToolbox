@@ -1,0 +1,4 @@
+token.txt
+ban.txt
+imports/__pycache__/*
+__pycache__/*
