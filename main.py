@@ -10,7 +10,7 @@ config = configparser.ConfigParser()
 config.read('config.ini')
 
 # Load token from file
-with open(config['settings']['token'], 'r') as file:
+with open(config['token']['token'], 'r') as file:
     TOKEN = file.read().strip()
 
 # Actions imported from file

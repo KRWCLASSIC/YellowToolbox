@@ -20,9 +20,11 @@ enable_pingdm = str(config['pingdm']['enabled'])
 admin_id = int(config['settings']['admin_id'])
 no_gif = config['settings']['no_gif']
 camera_clicks = {}
+ver = 1.0
 
 async def on_ready():
-    print(f'Bot is ready. Logged in as {bot.user}')
+    print(f'Bot is online! Logged in as {bot.user}')
+    print(f'Yellow Toolbox ver. {ver}')
     for guild in bot.guilds:
         print(f'- {guild.name}')
 
