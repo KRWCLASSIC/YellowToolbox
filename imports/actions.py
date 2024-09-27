@@ -15,6 +15,8 @@ config.read('config.ini')
 enable_nick_change = str(config['nicktrack']['enable_nick_change'])
 nicktrack_enabled = str(config['nicktrack']['nicktrack_enabled'])
 ADMIN_USER_ID = int(config['settings']['ADMIN_USER_ID'])
+tracked_user_id = int(config['pingdm']['target_id'])
+enable_ping_dms = str(config['pingdm']['enable_dm_pings'])
 target_id = int(config['nicktrack']['target_id'])
 no_gif = config['settings']['no_gif']
 camera_clicks = {}
@@ -66,6 +68,29 @@ async def on_message(message):
         if bot.user in message.mentions:
             await message.reply("kys", file=discord.File(no_gif))
         return
+    
+    if enable_ping_dms == 'True':
+        if any(user.id == tracked_user_id for user in message.mentions):
+            user = bot.get_user(tracked_user_id)
+            if user is not None:
+                try:
+                    message_link = f"https://discord.com/channels/{message.guild.id}/{message.channel.id}/{message.id}"
+
+                    # Create an embed with the message content and link
+                    embed = discord.Embed(
+                        title="You've been mentioned in a message!",
+                        description=f"[Jump to the message]({message_link})",  # Link to the message
+                        color=discord.Color.blue()
+                    )
+                    embed.add_field(name="Message Content", value=message.content or "No content", inline=False)
+                    embed.set_footer(text=f"From #{message.channel.name} in {message.guild.name}")
+                    embed.set_author(name=message.author.display_name, icon_url=message.author.avatar.url)
+
+                    # Send the embed as a DM
+                    await user.send(embed=embed)
+
+                except discord.Forbidden:
+                    print("I can't send a DM to targeted user.")
 
     if bot.user in message.mentions and message.author != bot.user:
         content = message.content.lower()

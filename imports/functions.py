@@ -25,7 +25,6 @@ ban_file = config['settings']['ban_file']
 wrong_mp3 = config['settings']['wrong_mp3']
 
 # Async Functions
-    
 async def handle_gif_creation(message, credited_user):
     if message.attachments:
         for attachment in message.attachments:
@@ -254,7 +253,6 @@ async def handle_russian_roulette_command(message):
         await message.reply(f"Russian Roulette: 😅 {message.author.name} survived!")
 
 # Functions
-
 def count_camera_reactions(message):
     for reaction in message.reactions:
         if str(reaction.emoji) == '📷':
@@ -283,9 +281,6 @@ def create_gif_from_video(video_path, gif_path):
         clip.write_gif(gif_path)
     except Exception as e:
         print(f"Error creating GIF from video: {e}")
-
-def clear_terminal():
-    os.system('cls' if os.name == 'nt' else 'clear')
 
 def remove_query_params(url):
     parsed_url = urlparse(url)
