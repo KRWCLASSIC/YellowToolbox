@@ -4,7 +4,7 @@ import discord
 import re
 
 # Internal Imports
-from imports.helper_funcs import *
+from imports.functions import *
 from imports.bot_instance import bot
 
 # Load the config file
@@ -12,9 +12,10 @@ config = configparser.ConfigParser()
 config.read('config.ini')
 
 # Some variables and arrays
-enable_nick_change = config['settings']['enable_nick_change']
+enable_nick_change = str(config['nicktrack']['enable_nick_change'])
+nicktrack_enabled = str(config['nicktrack']['nicktrack_enabled'])
 ADMIN_USER_ID = int(config['settings']['ADMIN_USER_ID'])
-target_id = int(config['settings']['target_id'])
+target_id = int(config['nicktrack']['target_id'])
 no_gif = config['settings']['no_gif']
 camera_clicks = {}
 
@@ -45,14 +46,14 @@ async def on_reaction_add(reaction, user):
 
 async def on_member_update(before: discord.Member, after: discord.Member):
     # Check if the nickname has changed
-    if before.nick != after.nick and after.id == target_id:
+    if nicktrack_enabled == 'True' and before.nick != after.nick and after.id == target_id:
         # Send a message to the channel when the user changes their nickname
         channel = after.guild.get_channel(1287007606870904914)
         if channel:
             await channel.send(f"<@{ADMIN_USER_ID}>, User {after.name} got their nickname changed from '{before.nick}' to '{after.nick}'")
 
     # Forced nickname change mechanism (only if enabled)
-    if enable_nick_change and after.id == target_id and after.nick != "frajer":
+    if enable_nick_change == 'True' and after.id == target_id and after.nick != "frajer":
         await after.edit(nick="frajer")
 
 async def on_message(message):

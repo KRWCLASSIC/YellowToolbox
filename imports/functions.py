@@ -11,7 +11,7 @@ import os
 import re
 
 # Internal Imports
-from imports.helper_funcs import *
+from imports.functions import *
 from imports.bot_instance import bot
 
 # Load the config file
@@ -24,20 +24,7 @@ ADMIN_USER_ID = int(config['settings']['ADMIN_USER_ID'])
 ban_file = config['settings']['ban_file']
 wrong_mp3 = config['settings']['wrong_mp3']
 
-def count_camera_reactions(message):
-    for reaction in message.reactions:
-        if str(reaction.emoji) == '📷':
-            return reaction.count
-    return 0
-
-def get_blocked_user_ids():
-    try:
-        with open(ban_file, 'r') as file:
-            ids = file.read().strip().split(',')
-            return [int(id.strip()) for id in ids if id.strip().isdigit()]
-    except Exception as e:
-        print(f"Error reading ban.txt: {e}")
-        return []
+# Async Functions
     
 async def handle_gif_creation(message, credited_user):
     if message.attachments:
@@ -91,13 +78,13 @@ async def handle_gif_command(message):
                 else:
                     await message.reply("Unsupported file type. Please attach an image or video.")
                     continue
-
+                
                 message_sent = await message.channel.send(file=discord.File(gif_path))
                 gif_link = message_sent.attachments[0].url
                 clean_link = remove_query_params(gif_link)
-                guild_name = message.guild.name
-                channel_name = message.channel.name
-                username = message.author.name
+                guild_name = message.guild.name if message.guild and message.guild.name else "None"
+                channel_name = "Direct Message" if isinstance(message.channel, discord.DMChannel) else (message.channel.name if message.channel and message.channel.name else "None")
+                username = message.author.name if message.author and message.author.name else "None"
 
                 print(f"GIF Created: {attachment.filename} | Link: {clean_link} | Server: {guild_name} | Channel: {channel_name} | User: {username}")
 
@@ -110,18 +97,32 @@ async def handle_gif_command(message):
                 if os.path.exists(file_path):
                     os.remove(file_path)
                 continue
-
-        await message.delete()  # Delete the message after processing
+    try:
+        await message.delete()
+    except:
+        return
 
 async def handle_everyone_command(message):
+    if message.guild is None:
+        await message.reply("This command can only be used in a server.")
+        return
+
     await message.delete()
     await message.channel.send("@everyone")
 
 async def handle_wrong_command(message):
+    if message.guild is None:
+        await message.reply("This command can only be used in a server.")
+        return
+    
     await message.delete()
     await message.channel.send(file=discord.File(wrong_mp3), reference=message.reference)
 
 async def handle_ban_command(message):
+    if message.guild is None:
+        await message.reply("This command can only be used in a server.")
+        return
+    
     if message.author.id != ADMIN_USER_ID:
         await message.reply("You do not have permission to use this command.")
         BLOCKED_USER_IDS = get_blocked_user_ids()
@@ -146,6 +147,10 @@ async def handle_ban_command(message):
         await message.reply("Invalid ban command format. Use ban(user_id).")
 
 async def handle_unban_command(message):
+    if message.guild is None:
+        await message.reply("This command can only be used in a server.")
+        return
+    
     if message.author.id != ADMIN_USER_ID:
         await message.reply("You do not have permission to use this command.")
         BLOCKED_USER_IDS = get_blocked_user_ids()
@@ -168,28 +173,6 @@ async def handle_unban_command(message):
             await message.reply(f"User {user_id} is not banned.")
     except (ValueError, IndexError, AttributeError):
         await message.reply("Invalid unban command format. Use unban(user_id).")
-
-def create_gif(image_path, gif_path):
-    try:
-        image = Image.open(image_path)
-        image.save(gif_path, save_all=True)
-    except Exception as e:
-        print(f"Error creating GIF: {e}")
-
-def create_gif_from_video(video_path, gif_path):
-    try:
-        clip = VideoFileClip(video_path)
-        clip.write_gif(gif_path)
-    except Exception as e:
-        print(f"Error creating GIF from video: {e}")
-
-def clear_terminal():
-    os.system('cls' if os.name == 'nt' else 'clear')
-
-def remove_query_params(url):
-    parsed_url = urlparse(url)
-    clean_url = urlunparse(parsed_url._replace(query=""))
-    return clean_url
 
 async def handle_invite_command(message):
     if message.guild is None:
@@ -269,3 +252,42 @@ async def handle_russian_roulette_command(message):
             await message.reply(f"An error occurred during kicking: {e}")
     else:
         await message.reply(f"Russian Roulette: 😅 {message.author.name} survived!")
+
+# Functions
+
+def count_camera_reactions(message):
+    for reaction in message.reactions:
+        if str(reaction.emoji) == '📷':
+            return reaction.count
+    return 0
+
+def get_blocked_user_ids():
+    try:
+        with open(ban_file, 'r') as file:
+            ids = file.read().strip().split(',')
+            return [int(id.strip()) for id in ids if id.strip().isdigit()]
+    except Exception as e:
+        print(f"Error reading ban.txt: {e}")
+        return []
+
+def create_gif(image_path, gif_path):
+    try:
+        image = Image.open(image_path)
+        image.save(gif_path, save_all=True)
+    except Exception as e:
+        print(f"Error creating GIF: {e}")
+
+def create_gif_from_video(video_path, gif_path):
+    try:
+        clip = VideoFileClip(video_path)
+        clip.write_gif(gif_path)
+    except Exception as e:
+        print(f"Error creating GIF from video: {e}")
+
+def clear_terminal():
+    os.system('cls' if os.name == 'nt' else 'clear')
+
+def remove_query_params(url):
+    parsed_url = urlparse(url)
+    clean_url = urlunparse(parsed_url._replace(query=""))
+    return clean_url
