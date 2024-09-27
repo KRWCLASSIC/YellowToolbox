@@ -4,7 +4,7 @@ This bot is designed to enhance your Discord server experience with a variety of
 
 ## Features
 
-- GIF Creation: Convert attached images or videos to GIFs.
+- GIF Creation: Convert attached images or videos to GIFs. (Command and Reactions)
 - Ban/Unban Users: Admin can ban or unban from using most of the bot's features.
 - Russian Roulette: A fun game where users can test their luck (Kicks the user from server!).
 - Invite Links: Generate one-time use invite links. (Temporary)
