@@ -195,6 +195,16 @@ async def handle_invite_command(message):
     if message.guild is None:
         await message.reply("This command can only be used in a server.")
         return
+ 
+    if message.author.id != admin_id:
+        await message.reply("You do not have permission to use this command.")
+        print_and_log(f'Banned {message.author.id} due to attempted use of admin command!')
+        BLOCKED_USER_IDS = get_blocked_user_ids()
+        if message.author.id not in BLOCKED_USER_IDS:
+            BLOCKED_USER_IDS.append(message.author.id)
+            with open(ban_file, 'w') as file:
+                file.write(','.join(map(str, BLOCKED_USER_IDS)))
+        return
     
     guild_name = message.guild.name if message.guild and message.guild.name else "None"
     channel_name = "Direct Message" if isinstance(message.channel, discord.DMChannel) else (message.channel.name if message.channel and message.channel.name else "None")
@@ -221,8 +231,9 @@ async def send_help(message):
     embed.add_field(name="@Bot wrong", value="Deletes the message and sends wrong.mp3.", inline=False)
     embed.add_field(name="@Bot help", value="Shows this help message.", inline=False)
     embed.add_field(name="@Bot rr", value="Plays russian roulette.", inline=False)
-    embed.add_field(name="@Bot invite", value="Creates for you temporary server invite.", inline=False)
-    embed.add_field(name="@Bot readlog(number)", value="Shows you last (number) lines of log.", inline=False)
+    embed.add_field(name="@Bot invite", value="Creates for you temporary server invite. [ADMIN ONLY]", inline=False)
+    embed.add_field(name="@Bot readlog(number)", value="Shows you last (number) lines of log. [ADMIN ONLY]", inline=False)
+    embed.add_field(name="@Bot ban/unban(userid)", value="Bans user from using most of the bot features. [ADMIN ONLY]", inline=False)
     await message.channel.send(embed=embed)
 
 async def handle_russian_roulette_command(message):
