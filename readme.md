@@ -16,6 +16,8 @@ You don't need those, just use smth like python 3.11.7
 
 Dependencies? idk just download ones that will cause missing crash lol.
 
+or just install them from `requirements.txt`
+
 ## Config
 
 `config.ini`
