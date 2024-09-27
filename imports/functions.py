@@ -3,10 +3,12 @@ from urllib.parse import urlparse, urlunparse
 from moviepy.editor import VideoFileClip
 from collections import defaultdict
 from discord.ext import commands
+from datetime import datetime
 from PIL import Image
 import configparser
 import discord
 import random
+import json
 import os
 import re
 
@@ -18,14 +20,16 @@ from imports.bot_instance import bot
 config = configparser.ConfigParser()
 config.read('config.ini')
 
-# Some variables and arrays
-kicked_users_roles = defaultdict(list)
-ADMIN_USER_ID = int(config['settings']['ADMIN_USER_ID'])
-ban_file = config['settings']['ban_file']
+# Some variables
+telemetry_enabled = str(config['telemetry']['enabled'])
+telemetry_file_path = config['telemetry']['file_path']
+admin_id = int(config['settings']['admin_id'])
 wrong_mp3 = config['settings']['wrong_mp3']
+ban_file = config['settings']['ban_file']
 
 # Async Functions
 async def handle_gif_creation(message, credited_user):
+    # This function is only made for gif's made using camera reaction
     if message.attachments:
         for attachment in message.attachments:
             try:
@@ -49,7 +53,7 @@ async def handle_gif_creation(message, credited_user):
                 channel_name = message.channel.name
                 username = credited_user.name
 
-                print(f"GIF Created: {attachment.filename} | Link: {clean_link} | Server: {guild_name} | Channel: {channel_name} | User: {username}")
+                print_and_log(f"GIF Created: {attachment.filename} | Link: {clean_link} | Server: {guild_name} | Channel: {channel_name} | User: {username}")
 
                 os.remove(file_path)
                 os.remove(gif_path)
@@ -85,7 +89,7 @@ async def handle_gif_command(message):
                 channel_name = "Direct Message" if isinstance(message.channel, discord.DMChannel) else (message.channel.name if message.channel and message.channel.name else "None")
                 username = message.author.name if message.author and message.author.name else "None"
 
-                print(f"GIF Created: {attachment.filename} | Link: {clean_link} | Server: {guild_name} | Channel: {channel_name} | User: {username}")
+                print_and_log(f"GIF Created: {attachment.filename} | Link: {clean_link} | Server: {guild_name} | Channel: {channel_name} | User: {username}")
 
                 os.remove(file_path)
                 os.remove(gif_path)
@@ -105,6 +109,12 @@ async def handle_everyone_command(message):
     if message.guild is None:
         await message.reply("This command can only be used in a server.")
         return
+    
+    guild_name = message.guild.name if message.guild and message.guild.name else "None"
+    channel_name = "Direct Message" if isinstance(message.channel, discord.DMChannel) else (message.channel.name if message.channel and message.channel.name else "None")
+    username = message.author.name if message.author and message.author.name else "None"
+    
+    print_and_log(f"Everyone got pinged | Server: {guild_name} | Channel: {channel_name} | User: {username}")
 
     await message.delete()
     await message.channel.send("@everyone")
@@ -114,6 +124,12 @@ async def handle_wrong_command(message):
         await message.reply("This command can only be used in a server.")
         return
     
+    guild_name = message.guild.name if message.guild and message.guild.name else "None"
+    channel_name = "Direct Message" if isinstance(message.channel, discord.DMChannel) else (message.channel.name if message.channel and message.channel.name else "None")
+    username = message.author.name if message.author and message.author.name else "None"
+    
+    print_and_log(f"Someone was told wrong | Server: {guild_name} | Channel: {channel_name} | User: {username}")
+    
     await message.delete()
     await message.channel.send(file=discord.File(wrong_mp3), reference=message.reference)
 
@@ -122,8 +138,9 @@ async def handle_ban_command(message):
         await message.reply("This command can only be used in a server.")
         return
     
-    if message.author.id != ADMIN_USER_ID:
+    if message.author.id != admin_id:
         await message.reply("You do not have permission to use this command.")
+        print_and_log(f'Banned {message.author.id} due to attempted use of admin command!')
         BLOCKED_USER_IDS = get_blocked_user_ids()
         if message.author.id not in BLOCKED_USER_IDS:
             BLOCKED_USER_IDS.append(message.author.id)
@@ -150,8 +167,9 @@ async def handle_unban_command(message):
         await message.reply("This command can only be used in a server.")
         return
     
-    if message.author.id != ADMIN_USER_ID:
+    if message.author.id != admin_id:
         await message.reply("You do not have permission to use this command.")
+        print_and_log(f'Banned {message.author.id} due to attempted use of admin command!')
         BLOCKED_USER_IDS = get_blocked_user_ids()
         if message.author.id not in BLOCKED_USER_IDS:
             BLOCKED_USER_IDS.append(message.author.id)
@@ -177,6 +195,12 @@ async def handle_invite_command(message):
     if message.guild is None:
         await message.reply("This command can only be used in a server.")
         return
+    
+    guild_name = message.guild.name if message.guild and message.guild.name else "None"
+    channel_name = "Direct Message" if isinstance(message.channel, discord.DMChannel) else (message.channel.name if message.channel and message.channel.name else "None")
+    username = message.author.name if message.author and message.author.name else "None"
+    
+    print_and_log(f"Invite was created | Server: {guild_name} | Channel: {channel_name} | User: {username}")
 
     try:
         # Create a one-time 24-hour invite link
@@ -196,8 +220,10 @@ async def send_help(message):
     embed.add_field(name="@Bot everyone", value="Deletes the message and pings everyone.", inline=False)
     embed.add_field(name="@Bot wrong", value="Deletes the message and sends wrong.mp3.", inline=False)
     embed.add_field(name="@Bot help", value="Shows this help message.", inline=False)
+    embed.add_field(name="@Bot rr", value="Plays russian roulette.", inline=False)
+    embed.add_field(name="@Bot invite", value="Creates for you temporary server invite.", inline=False)
+    embed.add_field(name="@Bot readlog(number)", value="Shows you last (number) lines of log.", inline=False)
     await message.channel.send(embed=embed)
-    print("Sent help message.")
 
 async def handle_russian_roulette_command(message):
     if message.guild is None:
@@ -223,7 +249,7 @@ async def handle_russian_roulette_command(message):
             
             # DM the invite to the user before kicking
             dm_channel = await member.create_dm()
-            await dm_channel.send(f"You're about to be kicked! Here’s an invite to rejoin: {invite.url}")
+            await dm_channel.send(f"You're about to be kicked! Here's an invite to rejoin: {invite.url}")
 
         except discord.Forbidden:
             await message.reply("I don't have permission to DM this user or create invites.")
@@ -252,6 +278,51 @@ async def handle_russian_roulette_command(message):
     else:
         await message.reply(f"Russian Roulette: 😅 {message.author.name} survived!")
 
+    guild_name = message.guild.name if message.guild and message.guild.name else "None"
+    channel_name = "Direct Message" if isinstance(message.channel, discord.DMChannel) else (message.channel.name if message.channel and message.channel.name else "None")
+    username = message.author.name if message.author and message.author.name else "None"
+    
+    print_and_log(f"Someone played russian roulette | Server: {guild_name} | Channel: {channel_name} | User: {username}")
+
+async def handle_readlog_command(message, number: int):
+    if message.author.id != admin_id:
+        await message.reply("You do not have permission to use this command.")
+        print_and_log(f'Banned {message.author.id} due to attempted use of admin command!')
+        BLOCKED_USER_IDS = get_blocked_user_ids()
+        if message.author.id not in BLOCKED_USER_IDS:
+            BLOCKED_USER_IDS.append(message.author.id)
+            with open(ban_file, 'w') as file:
+                file.write(','.join(map(str, BLOCKED_USER_IDS)))
+        return
+    
+    try:
+        # Load the telemetry data from the JSON file
+        with open(telemetry_file_path, 'r') as file:
+            data = json.load(file)
+        
+        # Get the telemetry logs
+        telemetry_logs = data.get("telemetry", {})
+        
+        # Sort logs by timestamp (key) to get them in chronological order
+        sorted_logs = sorted(telemetry_logs.items(), key=lambda item: item[0])
+        
+        # Get the last 'number' entries
+        last_logs = sorted_logs[-number:]
+        
+        # Prepare the message as a code block
+        log_message = "\n".join([f"{timestamp}: {log}" for timestamp, log in last_logs])
+        code_block_message = f"```\n{log_message}\n```"
+        
+        # Send the log message back to the Discord channel as a code block
+        if log_message:
+            await message.channel.send(f"Last {number} log(s):\n{code_block_message}")
+        else:
+            await message.channel.send("No logs found.")
+    except FileNotFoundError:
+        await message.channel.send("Telemetry file not found.")
+    except Exception as e:
+        await message.channel.send(f"An error occurred: {str(e)}")
+
 # Functions
 def count_camera_reactions(message):
     for reaction in message.reactions:
@@ -265,7 +336,7 @@ def get_blocked_user_ids():
             ids = file.read().strip().split(',')
             return [int(id.strip()) for id in ids if id.strip().isdigit()]
     except Exception as e:
-        print(f"Error reading ban.txt: {e}")
+        print_and_log(f"Error reading ban.txt: {e}")
         return []
 
 def create_gif(image_path, gif_path):
@@ -273,16 +344,36 @@ def create_gif(image_path, gif_path):
         image = Image.open(image_path)
         image.save(gif_path, save_all=True)
     except Exception as e:
-        print(f"Error creating GIF: {e}")
+        print_and_log(f"Error creating GIF: {e}")
 
 def create_gif_from_video(video_path, gif_path):
     try:
         clip = VideoFileClip(video_path)
         clip.write_gif(gif_path)
     except Exception as e:
-        print(f"Error creating GIF from video: {e}")
+        print_and_log(f"Error creating GIF from video: {e}")
 
 def remove_query_params(url):
     parsed_url = urlparse(url)
     clean_url = urlunparse(parsed_url._replace(query=""))
     return clean_url
+
+def log_telemetry(message):
+    if telemetry_enabled:
+        timestamp = datetime.now().isoformat()
+        log_entry = {timestamp: message}
+        
+        if os.path.exists(telemetry_file_path):
+            with open(telemetry_file_path, 'r') as file:
+                telemetry_data = json.load(file)
+        else:
+            telemetry_data = {"telemetry": {}}
+        
+        telemetry_data["telemetry"].update(log_entry)
+        
+        with open(telemetry_file_path, 'w') as file:
+            json.dump(telemetry_data, file, indent=4)
+
+def print_and_log(message):
+    print(message)
+    log_telemetry(message)

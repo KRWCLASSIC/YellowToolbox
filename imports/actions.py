@@ -12,12 +12,12 @@ config = configparser.ConfigParser()
 config.read('config.ini')
 
 # Some variables and arrays
-enable_nick_change = str(config['nicktrack']['enable_nick_change'])
+forcenick_enabled = str(config['nicktrack']['forcenick_enabled'])
 nicktrack_enabled = str(config['nicktrack']['nicktrack_enabled'])
-ADMIN_USER_ID = int(config['settings']['ADMIN_USER_ID'])
 tracked_user_id = int(config['pingdm']['target_id'])
-enable_ping_dms = str(config['pingdm']['enable_dm_pings'])
 target_id = int(config['nicktrack']['target_id'])
+enable_pingdm = str(config['pingdm']['enabled'])
+admin_id = int(config['settings']['admin_id'])
 no_gif = config['settings']['no_gif']
 camera_clicks = {}
 
@@ -52,10 +52,10 @@ async def on_member_update(before: discord.Member, after: discord.Member):
         # Send a message to the channel when the user changes their nickname
         channel = after.guild.get_channel(1287007606870904914)
         if channel:
-            await channel.send(f"<@{ADMIN_USER_ID}>, User {after.name} got their nickname changed from '{before.nick}' to '{after.nick}'")
+            await channel.send(f"<@{admin_id}>, User {after.name} got their nickname changed from '{before.nick}' to '{after.nick}'")
 
     # Forced nickname change mechanism (only if enabled)
-    if enable_nick_change == 'True' and after.id == target_id and after.nick != "frajer":
+    if forcenick_enabled == 'True' and after.id == target_id and after.nick != "frajer":
         await after.edit(nick="frajer")
 
 async def on_message(message):
@@ -69,7 +69,7 @@ async def on_message(message):
             await message.reply("kys", file=discord.File(no_gif))
         return
     
-    if enable_ping_dms == 'True':
+    if enable_pingdm == 'True':
         if any(user.id == tracked_user_id for user in message.mentions):
             user = bot.get_user(tracked_user_id)
             if user is not None:
@@ -108,6 +108,8 @@ async def on_message(message):
             await handle_russian_roulette_command(message)
         elif re.search(r'\binvite\b', content):
             await handle_invite_command(message)
+        elif match := re.search(r'readlog\((\d+)\)', content):
+            await handle_readlog_command(message, int(match.group(1)))
         elif re.search(r'\bhelp\b', content) or len(content.split()) == 1:
             await send_help(message)
         return  # Exit early if the bot is mentioned with its own command
