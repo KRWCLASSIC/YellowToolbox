@@ -1,6 +1,6 @@
-# Discord Bot Project
+# Yellow Toolbox
 
-Yellow Toolbox! This bot is designed to enhance your Discord server experience with a variety of fun and useful commands. Below, you'll find an overview of the features, setup instructions, and how to contribute to the project.
+This bot is designed to enhance your Discord server experience with a variety of fun and useful features. Below, you'll find an overview of the features, setup instructions, and how to contribute to the project.
 
 ## Features
 
