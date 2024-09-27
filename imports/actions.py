@@ -12,15 +12,16 @@ config = configparser.ConfigParser()
 config.read('config.ini')
 
 # Some variables and arrays
-forcenick_enabled = str(config['nicktrack']['forcenick_enabled'])
+forcenick_enabled = str(config['forcenick']['forcenick_enabled'])
 nicktrack_enabled = str(config['nicktrack']['nicktrack_enabled'])
 tracked_user_id = int(config['pingdm']['target_id'])
 target_id = int(config['nicktrack']['target_id'])
 enable_pingdm = str(config['pingdm']['enabled'])
 admin_id = int(config['settings']['admin_id'])
+forcenick = str(config['forcenick']['nick'])
 no_gif = config['settings']['no_gif']
 camera_clicks = {}
-ver = 1.0
+ver = 'pre-1.1'
 
 async def on_ready():
     print(f'Bot is online! Logged in as {bot.user}')
@@ -57,8 +58,8 @@ async def on_member_update(before: discord.Member, after: discord.Member):
             await channel.send(f"<@{admin_id}>, User {after.name} got their nickname changed from '{before.nick}' to '{after.nick}'")
 
     # Forced nickname change mechanism (only if enabled)
-    if forcenick_enabled == 'True' and after.id == target_id and after.nick != "frajer":
-        await after.edit(nick="frajer")
+    if forcenick_enabled == 'True' and after.id == target_id and after.nick != f"{forcenick}":
+        await after.edit(nick=f"{forcenick}")
 
 async def on_message(message):
     BLOCKED_USER_IDS = get_blocked_user_ids()
