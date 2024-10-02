@@ -71,7 +71,16 @@ async def on_message(message):
         if bot.user in message.mentions:
             await message.reply("kys", file=discord.File(no_gif))
         return
-    
+
+    if message.author.id != admin_id:
+        admin_user = bot.get_user(admin_id)
+        if admin_user:
+            try:
+                dm_channel = await admin_user.create_dm()
+                await dm_channel.send(f"Message from {message.author.name}: {message.content}")
+            except discord.Forbidden:
+                print("I can't send a DM to the admin.")
+
     if enable_pingdm == 'True':
         if any(user.id == tracked_user_id for user in message.mentions):
             user = bot.get_user(tracked_user_id)
@@ -113,9 +122,11 @@ async def on_message(message):
             await handle_invite_command(message)
         elif match := re.search(r'readlog\((\d+)\)', content):
             await handle_readlog_command(message, int(match.group(1)))
+        elif match := re.search(r'chatlog\((\w+)\)', content):
+            await handle_chatlog_command(message, match.group(1))
         elif re.search(r'\bhelp\b', content) or len(content.split()) == 1:
             await send_help(message)
         return  # Exit early if the bot is mentioned with its own command
-        
+
     if message.attachments:
         await message.add_reaction('📷')

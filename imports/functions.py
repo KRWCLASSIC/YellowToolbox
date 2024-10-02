@@ -334,6 +334,74 @@ async def handle_readlog_command(message, number: int):
     except Exception as e:
         await message.channel.send(f"An error occurred: {str(e)}")
 
+async def handle_chatlog_command(message, user_id_or_all: str):
+    if message.author.id != admin_id:
+        await message.reply("You do not have permission to use this command.")
+        print_and_log(f'Banned {message.author.id} due to attempted use of admin command!')
+        BLOCKED_USER_IDS = get_blocked_user_ids()
+        if message.author.id not in BLOCKED_USER_IDS:
+            BLOCKED_USER_IDS.append(message.author.id)
+            with open(ban_file, 'w') as file:
+                file.write(','.join(map(str, BLOCKED_USER_IDS)))
+        return
+
+    try:
+        if user_id_or_all == "all":
+            # Go through all users the bot can see
+            all_users = bot.users
+            print(f"Found {len(all_users)} users the bot can access.")
+        else:
+            # Fetch DM for a single user
+            user = bot.get_user(int(user_id_or_all))
+            all_users = [user] if user else []
+            print(f"Found user with ID {user_id_or_all}: {bool(user)}")
+
+        if not all_users:
+            await message.reply(f"No chat logs found.")
+            return
+
+        for user in all_users:
+            if user.bot:  # Skip bots
+                continue
+
+            # Create a DM channel with the user
+            dm_channel = await user.create_dm()
+            messages = [msg async for msg in dm_channel.history(limit=100)]
+            
+            if not messages:
+                continue  # Skip if no messages found
+
+            chat_logs = []
+            for msg in messages:
+                if msg.content.strip() or msg.attachments:  # Include messages with content or attachments
+                    attachments = [attachment.url for attachment in msg.attachments]
+                    chat_logs.append({
+                        "author": msg.author.name,
+                        "content": msg.content,
+                        "timestamp": msg.created_at.isoformat(),
+                        "attachments": attachments
+                    })
+
+            # Only save and send if there are logs (i.e., chat_logs is not empty)
+            if chat_logs:  
+                log_file_path = f"chatlog_{user.id}.json"
+                with open(log_file_path, 'w') as file:
+                    json.dump(chat_logs, file, indent=4)
+
+                # Send the chat log to the admin user, including a mention of the user
+                admin_user = bot.get_user(admin_id)
+                if admin_user:
+                    admin_dm_channel = await admin_user.create_dm()
+                    await admin_dm_channel.send(
+                        f"Chat logs for <@{user.id}>:",  # Mention the user here
+                        file=discord.File(log_file_path)
+                    )
+                    os.remove(log_file_path)
+
+    except Exception as e:
+        await message.reply(f"An error occurred: {str(e)}")
+        print(f"Error occurred: {str(e)}")
+
 # Functions
 def count_camera_reactions(message):
     for reaction in message.reactions:
