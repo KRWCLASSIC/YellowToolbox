@@ -9,6 +9,9 @@ from imports.update import *
 # Prompt user for update
 update_input = input("Do you want to check for updates? [Y/n]: ").lower()
 
+# Force (no) update? (uncomment)
+# update_input = 'n'
+
 if update_input in ['y', 'yes']:
     update()
     exit()
