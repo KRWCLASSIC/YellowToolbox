@@ -1,5 +1,8 @@
 # Yellow Toolbox `1.1`
 
+![Static Badge](https://img.shields.io/badge/Version-1.1-yellow)
+![Static Badge](https://img.shields.io/badge/Maintainer-KRWCLASSIC-green)
+
 This bot is designed to enhance your Discord server experience with a variety of fun and useful features. Below, you'll find an overview of the features, setup instructions, and how to contribute to the project.
 
 ## Features
