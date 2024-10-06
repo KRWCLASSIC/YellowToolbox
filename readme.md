@@ -5,6 +5,7 @@
 ![Static Badge](https://img.shields.io/badge/Maintainer-KRWCLASSIC-green)
 
 ![Static Badge](https://img.shields.io/badge/Current_State-Early_Alpha-red)
+[![security: bandit](https://img.shields.io/badge/security-bandit-yellow.svg)](https://github.com/PyCQA/bandit)
 
 This bot is designed to enhance your Discord server experience with a variety of fun and useful features. Below, you'll find an overview of the features, setup instructions, and how to contribute to the project.
 

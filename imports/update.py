@@ -31,7 +31,7 @@ def update():
     url = "https://github.com/KRWCLASSIC/YellowToolbox/archive/refs/heads/main.zip"
     
     # Send a GET request
-    response = requests.get(url, stream=True)
+    response = requests.get(url, stream=True, timeout=10)
     total_size = int(response.headers.get('content-length', 0))  # Get the total file size
 
     with open("latest.zip", "wb") as file:
