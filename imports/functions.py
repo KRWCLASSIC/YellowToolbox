@@ -28,7 +28,7 @@ wrong_mp3 = config['settings']['wrong_mp3']
 ban_file = config['settings']['ban_file']
 
 # Async Functions
-async def handle_gif_creation(message, credited_user):
+async def handle_gif_creation(message, credited_users):
     # This function is only made for gif's made using camera reaction
     if message.attachments:
         for attachment in message.attachments:
@@ -51,9 +51,9 @@ async def handle_gif_creation(message, credited_user):
                 clean_link = remove_query_params(gif_link)
                 guild_name = message.guild.name
                 channel_name = message.channel.name
-                username = credited_user.name
+                usernames = ", ".join(user.name for user in credited_users if user != bot.user)
 
-                print_and_log(f"GIF Created: {attachment.filename} | Link: {clean_link} | Server: {guild_name} | Channel: {channel_name} | User: {username}")
+                log_gif_creation(attachment.filename, clean_link, guild_name, channel_name, usernames)
 
                 os.remove(file_path)
                 os.remove(gif_path)
@@ -233,6 +233,7 @@ async def send_help(message):
     embed.add_field(name="@Bot rr", value="Plays russian roulette.", inline=False)
     embed.add_field(name="@Bot invite", value="Creates for you temporary server invite. [ADMIN ONLY]", inline=False)
     embed.add_field(name="@Bot readlog(number)", value="Shows you last (number) lines of log. [ADMIN ONLY]", inline=False)
+    embed.add_field(name="@Bot chatlog(userid/all)", value="Sends you entire DM history with provided user. [ADMIN ONLY]", inline=False)
     embed.add_field(name="@Bot ban/unban(userid)", value="Bans user from using most of the bot features. [ADMIN ONLY]", inline=False)
     await message.channel.send(embed=embed)
 
@@ -461,3 +462,7 @@ def log_telemetry(message):
 def print_and_log(message):
     print(message)
     log_telemetry(message)
+
+def log_gif_creation(filename, link, guild_name, channel_name, usernames):
+    message = f"GIF Created: {filename} | Link: {link} | Server: {guild_name} | Channel: {channel_name} | Users: {usernames}"
+    print_and_log(message)

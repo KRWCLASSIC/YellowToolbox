@@ -21,7 +21,7 @@ admin_id = int(config['settings']['admin_id'])
 forcenick = str(config['forcenick']['nick'])
 no_gif = config['settings']['no_gif']
 camera_clicks = {}
-ver = 'pre-1.1'
+ver = '1.1'
 
 async def on_ready():
     print(f'Bot is online! Logged in as {bot.user}')
@@ -38,7 +38,9 @@ async def on_reaction_add(reaction, user):
 
     if str(reaction.emoji) == '📷':
         if reaction.message.id not in camera_clicks:
-            camera_clicks[reaction.message.id] = user
+            camera_clicks[reaction.message.id] = []
+
+        camera_clicks[reaction.message.id].append(user)
 
         message = await reaction.message.channel.fetch_message(reaction.message.id)
         camera_reactions = count_camera_reactions(message)
