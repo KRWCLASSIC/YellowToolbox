@@ -1,7 +1,7 @@
 # Yellow Toolbox `1.3`
 
 ![Static Badge](https://img.shields.io/badge/Stable_Version-1.3-yellow)
-![Static Badge](https://img.shields.io/badge/Code_Version-1.3-yellow)
+![Static Badge](https://img.shields.io/badge/Code_Version-pre--1.4-yellow)
 ![Static Badge](https://img.shields.io/badge/Maintainer-KRWCLASSIC-green)
 
 ![Static Badge](https://img.shields.io/badge/Current_State-Early_Alpha-red)
