@@ -8,13 +8,10 @@ import zipfile
 import shutil
 import os
 
-def calculate_file_hash(file_path):
-    sha256_hash = hashlib.sha256()
-    with open(file_path, "rb") as f:
-        # Read and update hash string value in blocks of 4K
-        for byte_block in iter(lambda: f.read(4096), b""):
-            sha256_hash.update(byte_block)
-    return sha256_hash.hexdigest()
+def files_are_different(file1, file2):
+    """Compare two files based on their contents."""
+    with open(file1, 'rb') as f1, open(file2, 'rb') as f2:
+        return f1.read() != f2.read()
 
 def update():
     # Step 2: Download the latest version
@@ -53,16 +50,8 @@ def update():
                 local_file.parent.mkdir(parents=True, exist_ok=True)
                 shutil.copy2(latest_file, local_file)
             else:
-                # Compare file hashes
-                latest_hash = calculate_file_hash(latest_file)
-                local_hash = calculate_file_hash(local_file)
-
-                print(f'Latest file: {latest_file}')
-                print(f'Local file: {local_file}')
-
-                print("Hash 1:", latest_hash, "Hash 2:", local_hash)
-                
-                if latest_hash != local_hash:
+                # Compare file contents
+                if files_are_different(latest_file, local_file):
                     shutil.copy2(latest_file, local_file)
                     print(f"Updated: {relative_path}")
                 else:
