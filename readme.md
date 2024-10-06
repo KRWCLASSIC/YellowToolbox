@@ -1,7 +1,7 @@
 # Yellow Toolbox `1.1`
 
 ![Static Badge](https://img.shields.io/badge/Version%2C%201.1) ![Static Badge](https://img.shields.io/badge/Maintainer%2C%20KRWCLASSIC)
-![Static Badge](https://img.shields.io/badge/Current_State%20-%20Rethinking_life_choices-red)
+![Static Badge](https://img.shields.io/badge/Version%20-%20Rethinking_life_choices-red)
 
 This bot is designed to enhance your Discord server experience with a variety of fun and useful features. Below, you'll find an overview of the features, setup instructions, and how to contribute to the project.
 
