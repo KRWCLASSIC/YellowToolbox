@@ -22,8 +22,8 @@ config.read('config.ini')
 telemetry_enabled = str(config['telemetry']['enabled'])
 telemetry_file_path = config['telemetry']['file_path']
 admin_id = int(config['settings']['admin_id'])
-wrong_mp3 = config['media']['wrong_mp3']
 ban_file = config['settings']['ban_file']
+wrong_mp3 = config['media']['wrong_mp3']
 
 # Async Functions
 async def handle_gif_creation(message, credited_users):
