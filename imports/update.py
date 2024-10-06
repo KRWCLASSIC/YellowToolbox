@@ -8,28 +8,28 @@ import zipfile
 import shutil
 import os
 
+# Converting from CRLF to LF (github vs windows)
 def normalize_line_endings(file_path):
-    """Read a text file and normalize its line endings to LF."""
     with open(file_path, 'r', encoding='utf-8') as f:
         return f.read().replace('\r\n', '\n')  # Replace CRLF with LF
 
+# Compare files
 def files_are_different(file1, file2):
-    """Compare two files based on their contents."""
     # Get the file extensions
     ext1 = file1.suffix.lower()
     ext2 = file2.suffix.lower()
 
     # If both files are text files, normalize and compare their contents
-    if ext1 in ['.py', '.txt', '.md', '.ini', '.gitignore', '.yaml', '.json'] and \
-       ext2 in ['.py', '.txt', '.md', '.ini', '.gitignore', '.yaml', '.json']:
+    if ext1 in ['.py', '.txt', '.md', '.ini', '.gitignore', '.json'] and \
+       ext2 in ['.py', '.txt', '.md', '.ini', '.gitignore', '.json']:
         return normalize_line_endings(file1) != normalize_line_endings(file2)
     else:
         # For binary files, compare their contents byte by byte
         with open(file1, 'rb') as f1, open(file2, 'rb') as f2:
             return f1.read() != f2.read()
 
+# Update
 def update():
-    # Step 2: Download the latest version
     url = "https://github.com/KRWCLASSIC/YellowToolbox/archive/refs/heads/main.zip"
     
     # Send a GET request
@@ -46,14 +46,14 @@ def update():
     
     progress_bar.close()  # Close the progress bar when done
     
-    # Step 3: Extract ZIP
+    # Extract ZIP
     with zipfile.ZipFile("latest.zip", "r") as zip_ref:
         zip_ref.extractall("latest_version")
     
     latest_dir = Path("latest_version/YellowToolbox-main")  # Path to the extracted folder
     local_dir = Path(os.getcwd())  # Current working directory
     
-    # Step 4: Compare and update files
+    # Compare and update files
     for root, _, files in os.walk(latest_dir):
         for file_name in files:
             latest_file = Path(root) / file_name
@@ -75,4 +75,3 @@ def update():
     os.remove("latest.zip")
     
     print("Update completed. Restart the script to apply changes.")
-    exit
