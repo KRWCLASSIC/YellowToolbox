@@ -37,6 +37,13 @@ async def on_reaction_add(reaction, user):
         return
 
     if str(reaction.emoji) == '📷':
+
+        BLOCKED_USER_IDS = get_blocked_user_ids()
+        if reaction.message.author in BLOCKED_USER_IDS:
+            if bot.user in message.mentions:
+                await message.reply("kys", file=discord.File(no_gif))
+            return
+
         if reaction.message.id not in camera_clicks:
             camera_clicks[reaction.message.id] = []
 
