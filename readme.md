@@ -1,4 +1,4 @@
-# Yellow Toolbox
+# Yellow Toolbox `1.1`
 
 This bot is designed to enhance your Discord server experience with a variety of fun and useful features. Below, you'll find an overview of the features, setup instructions, and how to contribute to the project.
 
