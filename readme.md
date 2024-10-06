@@ -8,7 +8,7 @@ This bot is designed to enhance your Discord server experience with a variety of
 
 <sub>Latest Stable Version: [here](https://github.com/KRWCLASSIC/YellowToolbox/tree/9ac6d7cc7d1de5784b167149c18c656343168fed)</sub>
 
-<sub>"Code" Versions contain all the hotpatches and newest features that might contain bugs!</sub>
+*"Code" Versions contain all the hotpatches and newest features, that might contain bugs!*
 
 ## Features
 
