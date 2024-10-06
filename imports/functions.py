@@ -373,14 +373,19 @@ async def handle_chatlog_command(message, user_id_or_all: str):
 
             chat_logs = []
             for msg in messages:
-                if msg.content.strip() or msg.attachments:  # Include messages with content or attachments
+                # Include messages with content, attachments, or embeds
+                if msg.content.strip() or msg.attachments or msg.embeds:
                     attachments = [attachment.url for attachment in msg.attachments]
-                    chat_logs.append({
+                    logEntry = {
                         "author": msg.author.name,
                         "content": msg.content,
                         "timestamp": msg.created_at.isoformat(),
                         "attachments": attachments
-                    })
+                    }
+                    if msg.embeds:  # Check if there are any embeds
+                        embedContent = [{"title": embed.title, "description": embed.description} for embed in msg.embeds]
+                        logEntry["embed_content"] = embedContent
+                    chat_logs.append(logEntry)
 
             # Only save and send if there are logs (i.e., chat_logs is not empty)
             if chat_logs:  

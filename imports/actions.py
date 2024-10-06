@@ -43,7 +43,7 @@ async def on_reaction_add(reaction, user):
         message = await reaction.message.channel.fetch_message(reaction.message.id)
         camera_reactions = count_camera_reactions(message)
 
-        if camera_reactions >= 2:
+        if camera_reactions >= 1:
             async for user in reaction.users():
                 await message.remove_reaction('📷', user)
 
@@ -72,7 +72,7 @@ async def on_message(message):
             await message.reply("kys", file=discord.File(no_gif))
         return
 
-    if message.author.id != admin_id:
+    if isinstance(message.channel, discord.DMChannel) and message.author.id != admin_id:
         admin_user = bot.get_user(admin_id)
         if admin_user:
             try:
@@ -126,7 +126,4 @@ async def on_message(message):
             await handle_chatlog_command(message, match.group(1))
         elif re.search(r'\bhelp\b', content) or len(content.split()) == 1:
             await send_help(message)
-        return  # Exit early if the bot is mentioned with its own command
-
-    if message.attachments:
-        await message.add_reaction('📷')
+        return  # Exit early if the bot is mentioned with its own commands
