@@ -1,4 +1,4 @@
-# Yellow Toolbox `1.2`
+# Yellow Toolbox `1.3`
 
 ![Static Badge](https://img.shields.io/badge/Stable_Version-1.3-yellow)
 ![Static Badge](https://img.shields.io/badge/Code_Version-1.3-yellow)
