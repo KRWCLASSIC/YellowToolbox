@@ -57,11 +57,16 @@ def update():
                 latest_hash = calculate_file_hash(latest_file)
                 local_hash = calculate_file_hash(local_file)
 
+                print(f'Latest file: {latest_file}')
+                print(f'Local file: {local_file}')
+
                 print("Hash 1:", latest_hash, "Hash 2:", local_hash)
                 
                 if latest_hash != local_hash:
                     shutil.copy2(latest_file, local_file)
                     print(f"Updated: {relative_path}")
+                else:
+                    print(f'{relative_path} remained unchanged.')
 
     # Cleanup
     shutil.rmtree("latest_version")
