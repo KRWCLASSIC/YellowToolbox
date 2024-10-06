@@ -19,7 +19,7 @@ target_id = int(config['nicktrack']['target_id'])
 enable_pingdm = str(config['pingdm']['enabled'])
 admin_id = int(config['settings']['admin_id'])
 forcenick = str(config['forcenick']['nick'])
-kys_gif = config['media']['no_gif']
+kys_gif = config['media']['kys_gif']
 camera_clicks = {}
 ver = 'pre-1.4'
 
