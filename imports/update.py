@@ -1,9 +1,7 @@
 # External Imports
 from pathlib import Path
 from tqdm import tqdm
-import configparser
 import requests
-import hashlib
 import zipfile
 import shutil
 import os

@@ -1,12 +1,5 @@
 # External Imports
-from pathlib import Path
-from tqdm import tqdm
 import configparser
-import requests
-import hashlib
-import zipfile
-import shutil
-import os
 
 # Internal Imports
 from imports.bot_instance import bot
@@ -18,7 +11,7 @@ update_input = input("Do you want to check for updates? [Y/n]: ").lower()
 
 if update_input in ['y', 'yes']:
     update()
-    exit
+    exit()
 
 # Load the config file
 config = configparser.ConfigParser()
