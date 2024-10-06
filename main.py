@@ -9,6 +9,7 @@ from imports.update import *
 # Prompt user for update
 update_input = input("Do you want to check for updates? [Y/n]: ").lower()
 
+# Yeah i just realized uploading my shit to server that this wont work for longer than 1 update lmao
 # Force (no) update? (uncomment)
 # update_input = 'n'
 
