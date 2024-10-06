@@ -1,8 +1,6 @@
 # External Imports
 from urllib.parse import urlparse, urlunparse
 from moviepy.editor import VideoFileClip
-from collections import defaultdict
-from discord.ext import commands
 from datetime import datetime
 from PIL import Image
 import configparser

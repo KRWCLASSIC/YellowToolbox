@@ -1,3 +1,4 @@
 discord
-Pillow
 moviepy
+Pillow
+tqdm
