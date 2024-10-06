@@ -19,7 +19,7 @@ target_id = int(config['nicktrack']['target_id'])
 enable_pingdm = str(config['pingdm']['enabled'])
 admin_id = int(config['settings']['admin_id'])
 forcenick = str(config['forcenick']['nick'])
-no_gif = config['settings']['no_gif']
+no_gif = config['media']['no_gif']
 camera_clicks = {}
 ver = 'pre-1.4'
 
@@ -40,7 +40,7 @@ async def on_reaction_add(reaction, user):
 
         BLOCKED_USER_IDS = get_blocked_user_ids()
         if reaction.message.author.id in BLOCKED_USER_IDS:
-            await reaction.message.channel.send(f"kys {reaction.message.author.mention} {no_gif}")
+            await reaction.message.channel.send(f"kys {reaction.message.author.mention} ", file=discord.File(no_gif))
             return
         
         if reaction.message.id not in camera_clicks:
@@ -77,7 +77,7 @@ async def on_message(message):
 
     if message.author.id in BLOCKED_USER_IDS:
         if bot.user in message.mentions:
-            await message.reply(f"kys {no_gif}")
+            await message.reply(f"kys", file=discord.File(no_gif))
         return
 
     if isinstance(message.channel, discord.DMChannel) and message.author.id != admin_id:
