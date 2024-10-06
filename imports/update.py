@@ -56,6 +56,8 @@ def update():
                 # Compare file hashes
                 latest_hash = calculate_file_hash(latest_file)
                 local_hash = calculate_file_hash(local_file)
+
+                print("Hash 1:", latest_hash, "Hash 2:", local_hash)
                 
                 if latest_hash != local_hash:
                     shutil.copy2(latest_file, local_file)
@@ -66,4 +68,3 @@ def update():
     os.remove("latest.zip")
     
     print("Update completed. Restart the script to apply changes.")
-    exit

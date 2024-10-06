@@ -18,6 +18,7 @@ update_input = input("Do you want to check for updates? [Y/n]: ").lower()
 
 if update_input in ['y', 'yes']:
     update()
+    exit
 
 # Load the config file
 config = configparser.ConfigParser()
