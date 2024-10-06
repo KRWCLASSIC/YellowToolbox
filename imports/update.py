@@ -8,10 +8,25 @@ import zipfile
 import shutil
 import os
 
+def normalize_line_endings(file_path):
+    """Read a text file and normalize its line endings to LF."""
+    with open(file_path, 'r', encoding='utf-8') as f:
+        return f.read().replace('\r\n', '\n')  # Replace CRLF with LF
+
 def files_are_different(file1, file2):
     """Compare two files based on their contents."""
-    with open(file1, 'rb') as f1, open(file2, 'rb') as f2:
-        return f1.read() != f2.read()
+    # Get the file extensions
+    ext1 = file1.suffix.lower()
+    ext2 = file2.suffix.lower()
+
+    # If both files are text files, normalize and compare their contents
+    if ext1 in ['.py', '.txt', '.md', '.ini', '.gitignore', '.yaml', '.json'] and \
+       ext2 in ['.py', '.txt', '.md', '.ini', '.gitignore', '.yaml', '.json']:
+        return normalize_line_endings(file1) != normalize_line_endings(file2)
+    else:
+        # For binary files, compare their contents byte by byte
+        with open(file1, 'rb') as f1, open(file2, 'rb') as f2:
+            return f1.read() != f2.read()
 
 def update():
     # Step 2: Download the latest version
@@ -50,15 +65,14 @@ def update():
                 local_file.parent.mkdir(parents=True, exist_ok=True)
                 shutil.copy2(latest_file, local_file)
             else:
-                # Compare file contents
+                # Compare file contents using the updated function
                 if files_are_different(latest_file, local_file):
                     shutil.copy2(latest_file, local_file)
                     print(f"Updated: {relative_path}")
-                else:
-                    print(f'{relative_path} remained unchanged.')
 
     # Cleanup
     shutil.rmtree("latest_version")
     os.remove("latest.zip")
     
     print("Update completed. Restart the script to apply changes.")
+    exit
