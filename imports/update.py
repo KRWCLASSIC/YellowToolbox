@@ -1,6 +1,7 @@
 # External Imports
 from pathlib import Path
 from tqdm import tqdm
+import configparser
 import requests
 import zipfile
 import shutil
@@ -25,6 +26,24 @@ def files_are_different(file1, file2):
         # For binary files, compare their contents byte by byte
         with open(file1, 'rb') as f1, open(file2, 'rb') as f2:
             return f1.read() != f2.read()
+
+# Function to update config.ini without overriding existing values
+def update_config_file(latest_file, local_file):
+    config = configparser.ConfigParser()
+    config.read(local_file)
+
+    latest_config = configparser.ConfigParser()
+    latest_config.read(latest_file)
+
+    for section in latest_config.sections():
+        if not config.has_section(section):
+            config.add_section(section)
+        for key, value in latest_config.items(section):
+            if not config.has_option(section, key):
+                config.set(section, key, value)
+
+    with open(local_file, 'w') as configfile:
+        config.write(configfile)
 
 # Update
 def update():
@@ -63,10 +82,14 @@ def update():
                 local_file.parent.mkdir(parents=True, exist_ok=True)
                 shutil.copy2(latest_file, local_file)
             else:
-                # Compare file contents using the updated function
-                if files_are_different(latest_file, local_file):
-                    shutil.copy2(latest_file, local_file)
-                    print(f"Updated: {relative_path}")
+                # Special handling for config.ini
+                if relative_path.name == "config.ini":
+                    update_config_file(latest_file, local_file)
+                else:
+                    # Compare file contents using the updated function
+                    if files_are_different(latest_file, local_file):
+                        shutil.copy2(latest_file, local_file)
+                        print(f"Updated: {relative_path}")
 
     # Cleanup
     shutil.rmtree("latest_version")
