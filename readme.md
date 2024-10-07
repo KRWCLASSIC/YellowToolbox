@@ -14,7 +14,7 @@ This bot is designed to enhance your Discord server experience with a variety of
 
 ## Features
 
-- Autoupdate: Ability to update itself (required manual update to pre-1.3)
+- Autoupdate: Ability to update itself (1.3+)
 - GIF Creation: Convert attached images or videos to GIFs. (Command and Reactions)
 - Ban/Unban Users: Admin can ban or unban from using most of the bot's features.
 - Russian Roulette: A fun game where users can test their luck (Kicks the user from server!).
