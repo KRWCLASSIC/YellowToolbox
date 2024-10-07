@@ -4,6 +4,7 @@ from moviepy.editor import VideoFileClip
 from datetime import datetime
 from PIL import Image
 import configparser
+import subprocess
 import discord
 import random
 import json
@@ -21,88 +22,123 @@ config.read('config.ini')
 # Some variables
 telemetry_enabled = str(config['telemetry']['enabled'])
 telemetry_file_path = config['telemetry']['file_path']
+max_file_size = int(config['settings']['max_file_size']) * 1024 * 1024
 admin_id = int(config['settings']['admin_id'])
-ban_file = config['settings']['ban_file']
+ban_list = config['settings']['ban_list']
 wrong_mp3 = config['media']['wrong_mp3']
 
 # Async Functions
 async def handle_gif_creation(message, credited_users):
-    # This function is only made for gif's made using camera reaction
     if message.attachments:
         for attachment in message.attachments:
+            file_path = f"./{attachment.filename}"
+            gif_path = file_path.rsplit('.', 1)[0] + ".gif"
+            
             try:
-                file_path = f"./{attachment.filename}"
+                if attachment.size > max_file_size:
+                    await message.reply(f"File is too large. Please attach a file smaller than {max_file_size}MB.")
+                    continue
+
+                # Save the attached file locally
                 await attachment.save(file_path)
 
+                # Handle image and video files separately
                 if attachment.filename.lower().endswith(('png', 'jpg', 'jpeg')):
-                    gif_path = file_path.rsplit('.', 1)[0] + ".gif"
-                    create_gif(file_path, gif_path)
+                    create_gif_from_image(file_path, gif_path)
                 elif attachment.filename.lower().endswith(('mp4', 'mov', 'avi')):
-                    gif_path = file_path.rsplit('.', 1)[0] + ".gif"
+                    # Check video duration
+                    if not is_video_duration_valid(file_path, max_duration=10):
+                        await message.reply("Video is too long. Please attach a video shorter than 10 seconds.")
+                        os.remove(file_path)
+                        continue
                     create_gif_from_video(file_path, gif_path)
                 else:
                     await message.reply("Unsupported file type. Please attach an image or video.")
                     continue
 
+                # Check if the GIF exceeds the size limit, and compress if necessary
+                if os.path.exists(gif_path) and os.path.getsize(gif_path) > max_file_size:
+                    gif_path = compress_gif(gif_path)
+
+                # Send the created GIF in the channel
                 message_sent = await message.channel.send(file=discord.File(gif_path))
                 gif_link = message_sent.attachments[0].url
                 clean_link = remove_query_params(gif_link)
+
                 guild_name = message.guild.name
                 channel_name = message.channel.name
                 usernames = ", ".join(user.name for user in credited_users if user != bot.user)
 
                 log_gif_creation(attachment.filename, clean_link, guild_name, channel_name, usernames)
 
-                os.remove(file_path)
-                os.remove(gif_path)
-
             except Exception as e:
                 await message.reply("There was an error processing the file.")
                 print(f"Error processing file: {e}")
+            finally:
+                # Ensure both the input and output files are deleted
                 if os.path.exists(file_path):
                     os.remove(file_path)
-                continue
+                if os.path.exists(gif_path):
+                    os.remove(gif_path)
 
 async def handle_gif_command(message):
     if message.attachments:
         for attachment in message.attachments:
+            file_path = f"./{attachment.filename}"
+            gif_path = file_path.rsplit('.', 1)[0] + ".gif"
+
             try:
-                file_path = f"./{attachment.filename}"
+                if attachment.size > max_file_size:
+                    await message.reply(f"File is too large. Please attach a file smaller than {max_file_size}MB.")
+                    continue
+
+                # Save the attached file locally
                 await attachment.save(file_path)
 
+                # Handle image and video files separately
                 if attachment.filename.lower().endswith(('png', 'jpg', 'jpeg')):
-                    gif_path = file_path.rsplit('.', 1)[0] + ".gif"
-                    create_gif(file_path, gif_path)
+                    create_gif_from_image(file_path, gif_path)
                 elif attachment.filename.lower().endswith(('mp4', 'mov', 'avi')):
-                    gif_path = file_path.rsplit('.', 1)[0] + ".gif"
+                    # Check video duration
+                    if not is_video_duration_valid(file_path, max_duration=10):
+                        await message.reply("Video is too long. Please attach a video shorter than 10 seconds.")
+                        os.remove(file_path)
+                        continue
                     create_gif_from_video(file_path, gif_path)
                 else:
                     await message.reply("Unsupported file type. Please attach an image or video.")
                     continue
                 
+                # Check if the GIF exceeds the size limit, and compress if necessary
+                if os.path.exists(gif_path) and os.path.getsize(gif_path) > max_file_size:
+                    gif_path = compress_gif(gif_path)
+
+                # Send the created GIF in the channel
                 message_sent = await message.channel.send(file=discord.File(gif_path))
                 gif_link = message_sent.attachments[0].url
                 clean_link = remove_query_params(gif_link)
+                
                 guild_name = message.guild.name if message.guild and message.guild.name else "None"
                 channel_name = "Direct Message" if isinstance(message.channel, discord.DMChannel) else (message.channel.name if message.channel and message.channel.name else "None")
                 username = message.author.name if message.author and message.author.name else "None"
 
                 print_and_log(f"GIF Created: {attachment.filename} | Link: {clean_link} | Server: {guild_name} | Channel: {channel_name} | User: {username}")
 
-                os.remove(file_path)
-                os.remove(gif_path)
-
             except Exception as e:
                 await message.reply("There was an error processing the file.")
                 print(f"Error processing file: {e}")
+            finally:
+                # Ensure both the input and output files are deleted
                 if os.path.exists(file_path):
                     os.remove(file_path)
-                continue
+                if os.path.exists(gif_path):
+                    os.remove(gif_path)
+
+    # Optionally delete the original message after processing
     try:
         await message.delete()
     except:
         return
-
 async def handle_everyone_command(message):
     if message.guild is None:
         await message.reply("This command can only be used in a server.")
@@ -142,7 +178,7 @@ async def handle_ban_command(message):
         BLOCKED_USER_IDS = get_blocked_user_ids()
         if message.author.id not in BLOCKED_USER_IDS:
             BLOCKED_USER_IDS.append(message.author.id)
-            with open(ban_file, 'w') as file:
+            with open(ban_list, 'w') as file:
                 file.write(','.join(map(str, BLOCKED_USER_IDS)))
         return
 
@@ -151,7 +187,7 @@ async def handle_ban_command(message):
         blocked_user_ids = get_blocked_user_ids()
         if user_id not in blocked_user_ids:
             blocked_user_ids.append(user_id)
-            with open(ban_file, 'w') as file:
+            with open(ban_list, 'w') as file:
                 file.write(','.join(map(str, blocked_user_ids)))
             await message.reply(f"User {user_id} has been banned.")
             await message.delete()
@@ -171,7 +207,7 @@ async def handle_unban_command(message):
         BLOCKED_USER_IDS = get_blocked_user_ids()
         if message.author.id not in BLOCKED_USER_IDS:
             BLOCKED_USER_IDS.append(message.author.id)
-            with open(ban_file, 'w') as file:
+            with open(ban_list, 'w') as file:
                 file.write(','.join(map(str, BLOCKED_USER_IDS)))
         return
 
@@ -180,7 +216,7 @@ async def handle_unban_command(message):
         blocked_user_ids = get_blocked_user_ids()
         if user_id in blocked_user_ids:
             blocked_user_ids.remove(user_id)
-            with open(ban_file, 'w') as file:
+            with open(ban_list, 'w') as file:
                 file.write(','.join(map(str, blocked_user_ids)))
             await message.reply(f"User {user_id} has been unbanned.")
             await message.delete()
@@ -200,7 +236,7 @@ async def handle_invite_command(message):
         BLOCKED_USER_IDS = get_blocked_user_ids()
         if message.author.id not in BLOCKED_USER_IDS:
             BLOCKED_USER_IDS.append(message.author.id)
-            with open(ban_file, 'w') as file:
+            with open(ban_list, 'w') as file:
                 file.write(','.join(map(str, BLOCKED_USER_IDS)))
         return
     
@@ -301,7 +337,7 @@ async def handle_readlog_command(message, number: int):
         BLOCKED_USER_IDS = get_blocked_user_ids()
         if message.author.id not in BLOCKED_USER_IDS:
             BLOCKED_USER_IDS.append(message.author.id)
-            with open(ban_file, 'w') as file:
+            with open(ban_list, 'w') as file:
                 file.write(','.join(map(str, BLOCKED_USER_IDS)))
         return
     
@@ -340,7 +376,7 @@ async def handle_chatlog_command(message, user_id_or_all: str):
         BLOCKED_USER_IDS = get_blocked_user_ids()
         if message.author.id not in BLOCKED_USER_IDS:
             BLOCKED_USER_IDS.append(message.author.id)
-            with open(ban_file, 'w') as file:
+            with open(ban_list, 'w') as file:
                 file.write(','.join(map(str, BLOCKED_USER_IDS)))
         return
 
@@ -415,27 +451,79 @@ def count_camera_reactions(message):
 
 def get_blocked_user_ids():
     try:
-        with open(ban_file, 'r') as file:
+        with open(ban_list, 'r') as file:
             ids = file.read().strip().split(',')
             return [int(id.strip()) for id in ids if id.strip().isdigit()]
     except Exception as e:
         print_and_log(f"Error reading ban.txt: {e}")
         return []
 
-def create_gif(image_path, gif_path):
+def is_video_duration_valid(file_path, max_duration=10):
     try:
-        image = Image.open(image_path)
-        image.save(gif_path, save_all=True)
+        with VideoFileClip(file_path) as video:
+            duration = video.duration
+            return duration <= max_duration
     except Exception as e:
-        print_and_log(f"Error creating GIF: {e}")
-
-def create_gif_from_video(video_path, gif_path):
+        print(f"Error checking video duration: {e}")
+        return False
+    
+def create_gif_from_image(input_path, output_path):
     try:
-        clip = VideoFileClip(video_path)
-        clip.write_gif(gif_path)
-    except Exception as e:
-        print_and_log(f"Error creating GIF from video: {e}")
+        # Convert image to GIF without heavy compression
+        subprocess.run([
+            'ffmpeg',
+            '-i', input_path,
+            '-loop', '1',
+            '-t', '10',
+            '-vf', 'scale=640:-1',
+            output_path,
+            '-y'  # Overwrite output file if it exists
+        ], check=True)
+    except subprocess.CalledProcessError as e:
+        print(f"FFmpeg error while processing image: {e}")
+        raise
 
+def create_gif_from_video(input_path, output_path):
+    try:
+        # Convert video to GIF without heavy compression
+        subprocess.run([
+            'ffmpeg',
+            '-i', input_path,
+            '-vf', 'fps=10,scale=640:-1',
+            output_path,
+            '-y'  # Overwrite output file if it exists
+        ], check=True)
+    except subprocess.CalledProcessError as e:
+        print(f"FFmpeg error while processing video: {e}")
+        raise
+
+def compress_gif(gif_path):
+    try:
+        # Generate a palette for the GIF
+        palette_path = gif_path.rsplit('.', 1)[0] + "_palette.png"
+        subprocess.run([
+            'ffmpeg',
+            '-i', gif_path,
+            '-vf', 'fps=10,palettegen=dither=bayer',
+            palette_path,
+            '-y'  # Overwrite output file if it exists
+        ], check=True)
+
+        # Create the compressed GIF using the generated palette
+        compressed_path = gif_path.rsplit('.', 1)[0] + "_compressed.gif"
+        subprocess.run([
+            'ffmpeg',
+            '-i', gif_path,
+            '-i', palette_path,
+            '-vf', 'fps=10,paletteuse=dither=floyd_steinberg',
+            compressed_path,
+            '-y'  # Overwrite output file if it exists
+        ], check=True)
+        
+        return compressed_path
+    except subprocess.CalledProcessError as e:
+        print(f"FFmpeg error during compression: {e}")
+        raise
 def remove_query_params(url):
     parsed_url = urlparse(url)
     clean_url = urlunparse(parsed_url._replace(query=""))
