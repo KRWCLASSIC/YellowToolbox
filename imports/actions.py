@@ -21,7 +21,7 @@ admin_id = int(config['settings']['admin_id'])
 forcenick = str(config['forcenick']['nick'])
 kys_gif = config['media']['kys_gif']
 camera_clicks = {}
-ver = 'pre-1.4'
+ver = '1.4'
 
 async def on_ready():
     print(f'Bot is online! Logged in as {bot.user}')
