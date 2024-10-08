@@ -9,7 +9,7 @@
 
 This bot is designed to enhance your Discord server experience with a variety of fun and useful features. Below, you'll find an overview of the features, setup instructions, and how to contribute to the project.
 
-<sub>Previous Stable Version: [here](https://github.com/KRWCLASSIC/YellowToolbox/tree/86b873cedd16cdd924d5e06bf06a584676f626e0)</sub>  
+<sub>Latest Stable Version: [here](https://github.com/KRWCLASSIC/YellowToolbox/tree/d135c289d90f62d83e2993bc044af8af70682e83)</sub>  
 <sub>"Code" Versions contain all the hotpatches and newest features, that might contain bugs!</sub>
 
 ## Features
