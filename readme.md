@@ -12,7 +12,7 @@ This bot is designed to enhance your Discord server experience with a variety of
 <sub>"Code" Versions contain all the hotpatches and newest features, that might contain bugs!</sub>
 <details>
 <summary>Stable Versions:</summary>
-<a href="https://github.com/KRWCLASSIC/YellowToolbox/tree/ae9ddc371e2074252e9cf26442773dac7d52e3fc">Latest - 1.5</a><br>
+<a href="error">Latest - 1.5</a><br>
 <sub><a href="https://github.com/KRWCLASSIC/YellowToolbox/tree/d135c289d90f62d83e2993bc044af8af70682e83">1.4</a></sub><br>
 <sub><a href="https://github.com/KRWCLASSIC/YellowToolbox/tree/86b873cedd16cdd924d5e06bf06a584676f626e0">1.3</a></sub><br>
 <sub><a href="https://github.com/KRWCLASSIC/YellowToolbox/tree/6c041521391a59dcc5033191994e0605fd1a33d6">1.2</a></sub><br>
