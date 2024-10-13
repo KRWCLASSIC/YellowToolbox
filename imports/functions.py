@@ -23,7 +23,9 @@ config.read('config.ini')
 max_file_size = int(config['settings']['max_file_size']) * 1024 * 1024
 telemetry_enabled = str(config['telemetry']['enabled'])
 telemetry_file_path = config['telemetry']['file_path']
+quote_channel_id = int(config['quotes']['channel_id'])
 admin_id = int(config['settings']['admin_id'])
+embed_color = int(config['quotes']['embed_color'], 16)  # Convert hex string to integer
 ban_list = config['settings']['ban_list']
 wrong_mp3 = config['media']['wrong_mp3']
 
@@ -451,6 +453,35 @@ async def handle_chatlog_command(message, user_id_or_all: str):
     except Exception as e:
         await message.reply(f"An error occurred: {str(e)}")
         print(f"Error occurred: {str(e)}")
+
+async def handle_quote_command(message):
+    # Check if the message is a reply
+    if not message.reference or not message.reference.resolved:
+        await message.reply("Please reply to a message you want to quote.")
+        return
+
+    # Get the original message being replied to
+    original_message = message.reference.resolved
+    
+    quote_channel = message.guild.get_channel(quote_channel_id)
+
+    if not quote_channel:
+        await message.reply("Quote channel not found.")
+        return
+
+    # Create an embed for the quoted message
+    embed = discord.Embed(
+        description=f"{original_message.content}\n\n[Quoted message](https://discord.com/channels/{message.guild.id}/{message.channel.id}/{message.id})",
+        color=discord.Color(embed_color)  # Use the custom hex color
+    )
+    embed.set_author(name=original_message.author.display_name, icon_url=original_message.author.avatar.url)
+    embed.set_footer(text=f"Quoted by {message.author.display_name}")
+
+    # Send the embed to the specified channel
+    await quote_channel.send(embed=embed)
+
+    # Optionally, delete the command message
+    await message.delete()
 
 # Functions
 def count_camera_reactions(message):

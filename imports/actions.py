@@ -134,4 +134,6 @@ async def on_message(message):
             await handle_chatlog_command(message, match.group(1))
         elif re.search(r'\bhelp\b', content) or len(content.split()) == 1:
             await send_help(message)
+        elif re.search(r'\bquote\b', content):
+            await handle_quote_command(message)
         return  # Exit early if the bot is mentioned with its own commands
