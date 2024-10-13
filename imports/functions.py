@@ -5,8 +5,9 @@ from datetime import datetime
 import configparser
 import subprocess
 import discord
-import random
 import asyncio
+import random
+import shutil
 import json
 import os
 import re
@@ -489,6 +490,12 @@ def count_camera_reactions(message):
         if str(reaction.emoji) == '📷':
             return reaction.count
     return 0
+
+def remove_pycache():
+    for root, dirs, files in os.walk('.'):
+        for dir in dirs:
+            if dir == '__pycache__':
+                shutil.rmtree(os.path.join(root, dir))
 
 def check_files():
     # Collect all file paths from the config

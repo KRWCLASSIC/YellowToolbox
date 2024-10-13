@@ -1,18 +1,19 @@
-# Yellow Toolbox `pre-1.5`
+# Yellow Toolbox `1.5`
 
-![Static Badge](https://img.shields.io/badge/Stable_Version-1.4-yellow)
-![Static Badge](https://img.shields.io/badge/Code_Version-pre--1.5-yellow)
+![Static Badge](https://img.shields.io/badge/Stable_Version-1.5-yellow)
+![Static Badge](https://img.shields.io/badge/Code_Version-1.5-yellow)
 ![Static Badge](https://img.shields.io/badge/Maintainer-KRWCLASSIC-green)
 
-![Static Badge](https://img.shields.io/badge/Current_State-Early_Alpha-red)
-[![security: bandit](https://img.shields.io/badge/security-bandit-yellow.svg)](https://github.com/PyCQA/bandit)
+![Static Badge](https://img.shields.io/badge/Current_State-Alpha-red)
+[![Security: bandit](https://img.shields.io/badge/security-bandit-yellow.svg)](https://github.com/PyCQA/bandit)
 
 This bot is designed to enhance your Discord server experience with a variety of fun and useful features. Below, you'll find an overview of the features, setup instructions, and how to contribute to the project.
 
 <sub>"Code" Versions contain all the hotpatches and newest features, that might contain bugs!</sub>
 <details>
 <summary>Stable Versions:</summary>
-<a href="https://github.com/KRWCLASSIC/YellowToolbox/tree/d135c289d90f62d83e2993bc044af8af70682e83">Latest - 1.4</a><br>
+<a href="no link">Latest - 1.5</a><br>
+<sub><a href="https://github.com/KRWCLASSIC/YellowToolbox/tree/d135c289d90f62d83e2993bc044af8af70682e83">1.4</a></sub><br>
 <sub><a href="https://github.com/KRWCLASSIC/YellowToolbox/tree/86b873cedd16cdd924d5e06bf06a584676f626e0">1.3</a></sub><br>
 <sub><a href="https://github.com/KRWCLASSIC/YellowToolbox/tree/6c041521391a59dcc5033191994e0605fd1a33d6">1.2</a></sub><br>
 <sub><a href="https://github.com/KRWCLASSIC/YellowToolbox/tree/9ac6d7cc7d1de5784b167149c18c656343168fed">1.1</a></sub><br>

@@ -6,12 +6,15 @@ from imports.bot_instance import bot
 from imports.actions import *
 from imports.update import *
 
-# Load the config file
-config = configparser.ConfigParser()
-config.read('config.ini')
+# Remove pycache folders
+remove_pycache()
 
 # Check if all importnant files exist
 check_files()
+
+# Load the config file
+config = configparser.ConfigParser()
+config.read('config.ini')
 
 # Load autoupdate variable
 update_input = str(config['settings']['autoupdate'])
