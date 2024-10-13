@@ -1,7 +1,7 @@
-# Yellow Toolbox `1.5`
+# Yellow Toolbox `pre-1.6`
 
 ![Static Badge](https://img.shields.io/badge/Stable_Version-1.5-yellow)
-![Static Badge](https://img.shields.io/badge/Code_Version-1.5-yellow)
+![Static Badge](https://img.shields.io/badge/Code_Version-pre--1.6-yellow)
 ![Static Badge](https://img.shields.io/badge/Maintainer-KRWCLASSIC-green)
 
 ![Static Badge](https://img.shields.io/badge/Current_State-Alpha-red)
@@ -9,7 +9,7 @@
 
 This bot is designed to enhance your Discord server experience with a variety of fun and useful features. Below, you'll find an overview of the features, setup instructions, and how to contribute to the project.
 
-<sub>"Code" Versions contain all the hotpatches and newest features, that might contain bugs!</sub>
+<sub><a href="https://github.com/KRWCLASSIC/YellowToolbox">"Code" Versions</a> contain all the hotpatches and newest features, that might contain bugs!</sub>
 <details>
 <summary>Stable Versions:</summary>
 <a href="https://github.com/KRWCLASSIC/YellowToolbox/tree/9e04f9060edae2a102e37ae245e6c767b8328b5e">Latest - 1.5</a><br>

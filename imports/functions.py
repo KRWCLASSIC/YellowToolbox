@@ -268,6 +268,7 @@ async def send_help(message):
     embed.add_field(name="@Bot wrong", value="Deletes the message and sends wrong.mp3.", inline=False)
     embed.add_field(name="@Bot help", value="Shows this help message.", inline=False)
     embed.add_field(name="@Bot rr", value="Plays russian roulette.", inline=False)
+    embed.add_field(name="@Bot quote", value="Quotes replied message in the channel.", inline=False)
     embed.add_field(name="@Bot invite", value="Creates for you temporary server invite. [ADMIN ONLY]", inline=False)
     embed.add_field(name="@Bot readlog(number)", value="Shows you last (number) lines of log. [ADMIN ONLY]", inline=False)
     embed.add_field(name="@Bot chatlog(userid/all)", value="Sends you entire DM history with provided user. [ADMIN ONLY]", inline=False)
