@@ -2,11 +2,11 @@
 from urllib.parse import urlparse, urlunparse
 from moviepy.editor import VideoFileClip
 from datetime import datetime
-from PIL import Image
 import configparser
 import subprocess
 import discord
 import random
+import asyncio
 import json
 import os
 import re
@@ -20,9 +20,9 @@ config = configparser.ConfigParser()
 config.read('config.ini')
 
 # Some variables
+max_file_size = int(config['settings']['max_file_size']) * 1024 * 1024
 telemetry_enabled = str(config['telemetry']['enabled'])
 telemetry_file_path = config['telemetry']['file_path']
-max_file_size = int(config['settings']['max_file_size']) * 1024 * 1024
 admin_id = int(config['settings']['admin_id'])
 ban_list = config['settings']['ban_list']
 wrong_mp3 = config['media']['wrong_mp3']
@@ -281,6 +281,9 @@ async def handle_russian_roulette_command(message):
     # Announce Russian Roulette action
     await message.reply(f"🔫 Russian Roulette: Rolling the chamber...")
 
+    # Add a delay before revealing the result
+    await asyncio.sleep(2)  # Wait for 2 seconds
+
     if random_number == 5:
         member = message.author
 
@@ -343,7 +346,7 @@ async def handle_readlog_command(message, number: int):
     
     try:
         # Load the telemetry data from the JSON file
-        with open(telemetry_file_path, 'r') as file:
+        with open(telemetry_file_path, 'r', encoding='utf-8') as file:
             data = json.load(file)
         
         # Get the telemetry logs
@@ -352,16 +355,23 @@ async def handle_readlog_command(message, number: int):
         # Sort logs by timestamp (key) to get them in chronological order
         sorted_logs = sorted(telemetry_logs.items(), key=lambda item: item[0])
         
-        # Get the last 'number' entries
-        last_logs = sorted_logs[-number:]
+        # Get the last 'number' entries, but adjust if there are less logs than requested
+        last_logs = sorted_logs[-number:] if len(sorted_logs) >= number else sorted_logs
         
-        # Prepare the message as a code block
+        # Prepare the log message
         log_message = "\n".join([f"{timestamp}: {log}" for timestamp, log in last_logs])
-        code_block_message = f"```\n{log_message}\n```"
         
-        # Send the log message back to the Discord channel as a code block
+        # Save the log message to a text file
+        with open("last_logs.txt", 'w', encoding='utf-8') as file:
+            file.write(log_message)
+        
+        # Send the log message back to the Discord channel as a file
         if log_message:
-            await message.channel.send(f"Last {number} log(s):\n{code_block_message}")
+            file = discord.File("last_logs.txt")
+            # Adjust the message to reflect the actual number of logs sent
+            actual_number = len(last_logs)
+            await message.channel.send(f"Last {actual_number} lines of log:", file=file)
+            os.remove("last_logs.txt")  # Remove the file after sending
         else:
             await message.channel.send("No logs found.")
     except FileNotFoundError:
@@ -448,6 +458,24 @@ def count_camera_reactions(message):
         if str(reaction.emoji) == '📷':
             return reaction.count
     return 0
+
+def check_files():
+    # Collect all file paths from the config
+    missing_files = []
+
+    # Iterate over all sections and keys in the config
+    for section in config.sections():
+        for key, value in config.items(section):
+            # Check if the value is a file path
+            if os.path.splitext(value)[1]:  # Check if there's a file extension
+                if not os.path.exists(value):
+                    missing_files.append(value)
+
+    if missing_files:
+        print("The following files are missing:")
+        for file in missing_files:
+            print(f"- {file}")
+        exit(1)
 
 def get_blocked_user_ids():
     try:

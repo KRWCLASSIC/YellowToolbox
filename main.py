@@ -10,6 +10,9 @@ from imports.update import *
 config = configparser.ConfigParser()
 config.read('config.ini')
 
+# Check if all importnant files exist
+check_files()
+
 # Load autoupdate variable
 update_input = str(config['settings']['autoupdate'])
 
