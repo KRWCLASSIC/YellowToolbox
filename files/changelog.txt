@@ -1,5 +1,5 @@
 Plans:
-- Switch to YMAL config (1.8)
+- Switch to YAML/TOML config (1.8)
 - Move over to cogs (2.0)
 - Move over to slashcommands (2.0)
 - Create KRW's Bot Template or smth | YellowTemplate 😈 (2.X)
