@@ -1,5 +1,6 @@
 Plans:
 - Switch to YAML/TOML config (1.8)
+- Move config file to files folder and rename it to ".config" (1.8/1.9)
 - Move over to cogs (2.0)
 - Move over to slashcommands (2.0)
 - Create KRW's Bot Template or smth | YellowTemplate 😈 (2.X)
@@ -14,6 +15,7 @@ Plans:
 - Added ASCII art on startup
 - Improvements to checking files
 - For the 999th time changed variable order
+- Fixed pingdm sending dms to all users no matter if person was pinged or not
 
 1.6
 - Moved req.txt to files folder

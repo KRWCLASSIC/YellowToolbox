@@ -104,31 +104,29 @@ async def on_message(message):
                     print(f"I can't send a DM to admin with ID {admin_id}.")
 
     if enable_pingdm == 'True':
-        if any(user.id in tracked_user_ids for user in message.mentions):
-            for tracked_user_id in tracked_user_ids:
-                user = bot.get_user(tracked_user_id)
-                if user is not None:
-                    try:
-                        message_link = f"https://discord.com/channels/{message.guild.id}/{message.channel.id}/{message.id}"
+        for user in message.mentions:
+            if user.id in tracked_user_ids:
+                try:
+                    message_link = f"https://discord.com/channels/{message.guild.id}/{message.channel.id}/{message.id}"
 
-                        # Create an embed with the message content and link
-                        embed = discord.Embed(
-                            title="You've been mentioned in a message!",
-                            description=f"[Jump to the message]({message_link})",  # Link to the message
-                            color=discord.Color.blue()
-                        )
-                        embed.add_field(name="Message Content", value=message.content or "No content", inline=False)
-                        embed.set_footer(text=f"From #{message.channel.name} in {message.guild.name}")
-                        embed.set_author(name=message.author.display_name, icon_url=message.author.avatar.url)
+                    # Create an embed with the message content and link
+                    embed = discord.Embed(
+                        title="You've been mentioned in a message!",
+                        description=f"[Jump to the message]({message_link})",  # Link to the message
+                        color=discord.Color.blue()
+                    )
+                    embed.add_field(name="Message Content", value=message.content or "No content", inline=False)
+                    embed.set_footer(text=f"From #{message.channel.name} in {message.guild.name}")
+                    embed.set_author(name=message.author.display_name, icon_url=message.author.avatar.url)
 
-                        # Prepare attachments
-                        files = [await attachment.to_file() for attachment in message.attachments]
+                    # Prepare attachments
+                    files = [await attachment.to_file() for attachment in message.attachments]
 
-                        # Send the embed and attachments as a DM
-                        await user.send(embed=embed, files=files)
+                    # Send the embed and attachments as a DM
+                    await user.send(embed=embed, files=files)
 
-                    except discord.Forbidden:
-                        print("I can't send a DM to targeted user.")
+                except discord.Forbidden:
+                    print("I can't send a DM to targeted user.")
 
     if bot.user in message.mentions and message.author != bot.user:
         content = message.content.lower()
