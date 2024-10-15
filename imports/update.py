@@ -38,10 +38,6 @@ def update_config_file(latest_file, local_file):
     for section in latest_config.sections():
         if not config.has_section(section):
             config.add_section(section)
-        # Remove keys that are not in the latest config
-        for key in config.options(section):
-            if not latest_config.has_option(section, key):
-                config.remove_option(section, key)
         # Add or update keys from the latest config
         for key, value in latest_config.items(section):
             config.set(section, key, value)
