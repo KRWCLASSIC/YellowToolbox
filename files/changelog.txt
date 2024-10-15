@@ -1,9 +1,9 @@
 Plans:
+- Switch to YMAL config (1.8)
 - Move over to cogs (2.0)
 - Move over to slashcommands (2.0)
-- Create KRW's Bot Template or smth (2.X)
-- YellowBoombox (2.X+)
-- Switch to YMAL config (1.8)
+- Create KRW's Bot Template or smth | YellowTemplate 😈 (2.X)
+- YellowBoombox (After major changes in 2.X of YellowToolbox)
 
 1.8
 - 
