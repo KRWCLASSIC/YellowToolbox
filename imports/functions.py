@@ -516,10 +516,18 @@ def check_files():
                 if not os.path.exists(value):
                     missing_files.append(value)
 
+    # Check if token.txt is missing and print a warning message
+    if 'files/token.txt' not in missing_files and not os.path.exists('files/token.txt'):
+        print("Warning: token.txt file is missing. Please paste your bot token there.")
+
     if missing_files:
         print("The following files are missing:")
         for file in missing_files:
             print(f"- {file}")
+            # Attempt to create the missing file
+            with open(file, 'w') as f:
+                f.write("")  # Create an empty file
+            print(f"Created {file} as an empty file.")
         exit(1)
 
 def get_blocked_user_ids():

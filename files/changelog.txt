@@ -3,8 +3,17 @@ Plans:
 - Move over to slashcommands (2.0)
 - Create KRW's Bot Template or smth (2.X)
 - YellowBoombox (2.X+)
+- Switch to YMAL config (1.8)
+
+1.8
+- 
 
 1.7
+- Updated update script to better handle config updates
+- Made setting up the bot even easier (setup script and minor changes to check_files function)
+- Added ASCII art on startup
+- Improvements to checking files
+- For the 999th time changed variable order
 
 1.6
 - Moved req.txt to files folder
@@ -13,6 +22,8 @@ Plans:
 - Updated pingdm feature to include attachments
 - Fixed quotes to use enabled variable
 - Unified true/false checks
+- Moved version variable into bot_instance file (for better readability)
+- Updated variables
 
 1.5
 - Bot now doesnt crash on fresh installs (mostly)

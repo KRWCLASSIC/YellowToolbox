@@ -12,17 +12,28 @@ config = configparser.ConfigParser()
 config.read('config.ini')
 
 # Some variables and arrays
-forcenick_enabled = str(config['forcenick']['forcenick_enabled'])
-nicktrack_enabled = str(config['nicktrack']['nicktrack_enabled'])
 tracked_user_ids = [int(id.strip()) for id in config['pingdm']['target_ids'].split(',')]
 target_ids = [int(id.strip()) for id in config['nicktrack']['target_ids'].split(',')]
-enable_pingdm = str(config['pingdm']['enabled'])
 admin_ids = [int(id.strip()) for id in config['settings']['admin_ids'].split(',')]
+forcenick_enabled = str(config['forcenick']['forcenick_enabled'])
+nicktrack_enabled = str(config['nicktrack']['nicktrack_enabled'])
+enable_pingdm = str(config['pingdm']['enabled'])
 forcenick = str(config['forcenick']['nick'])
 kys_gif = config['media']['kys_gif']
 camera_clicks = {}
 
 async def on_ready():
+
+    print('')
+    print('   ^^^:  .^^^          :55Y .555.                         ^^^^^^^^^^                      ?55! 7557                               ')
+    print('   P@@@: #@@P          ?@@@ ~@@@:                        .@@@@@@@@@&                      &@@G B@@#                               ')
+    print('    5@@&P@@Y   7G###P: ?@@@ ^@@@: :YB&&#G7 .B##: G##Y J##:   &@@B    .?B&&&B?.  ^5#&&#P~  &@@P B@@&5&&#J  .JB&&&G?  ?##B. G##!    ')
+    print('     Y@@@@?   #@@B?@@@:7@@@ ^@@@.^@@@J~#@@# P@@Y~@@@@:&@#    &@@G   .@@@P^P@@@.J@@@7!&@@P &@@P B@@&!7@@@Y.@@@5^G@@&. ?@@&&@@~     ')
+    print('      &@@B   .@@@&PPGB.7@@@ ^@@@.!@@@^ 5@@@  @@&&@7@@#@@.    &@@G   :@@@7 7@@@:P@@&. #@@B &@@P B@@& .@@@Y^@@@! ?@@@. :@@@@@&.     ')
+    print('      B@@G    ^B@@&#&7 7@@& ^@@@. ?&@@@@@G:  7@@@G P@@@J     #@@P    ~#@@@@@#~  5&@@@@&5  #@@5 G@@&&@@@P  !#@@@@@B^ ?@@&:?@@@~    ')
+    print('                 ....                ...        .                       ...       ....              ..       ...    ..      ..    ')
+    print('')
+
     print(f'Bot is online! Logged in as {bot.user}')
     print(f'Yellow Toolbox ver. {ver}')
     for guild in bot.guilds:
