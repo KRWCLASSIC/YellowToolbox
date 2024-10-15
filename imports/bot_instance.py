@@ -10,5 +10,8 @@ intents.reactions = True
 intents.guilds = True
 intents.members = True
 
+# Version Variable
+ver = '1.6'
+
 # Register the bot
 bot = commands.Bot(command_prefix="", intents=intents)

@@ -1,0 +1,62 @@
+Plans:
+- Move over to cogs (2.0)
+- Move over to slashcommands (2.0)
+- Create KRW's Bot Template or smth (2.X)
+- YellowBoombox (2.X+)
+
+1.7
+
+1.6
+- Moved req.txt to files folder
+- Added changelog
+- Added support for multiple id's in config
+- Updated pingdm feature to include attachments
+- Fixed quotes to use enabled variable
+- Unified true/false checks
+
+1.5
+- Bot now doesnt crash on fresh installs (mostly)
+- Russian roulette now has 2s delay
+- Changed some line orders
+- Readlog improvements
+- Added "quote" command with some customizability
+- Some comments in config
+- __pycache__ auto remover
+
+1.4
+- Decreased size of "kys.gif"
+- Cleared up variable names
+- Renamed some files
+- Changed up some config stuff
+- Added bandit security (scanning every stable release, yes I know about these "low" vulnerabilities)
+- Ported over to FFmpeg
+- Autoupdate improvements
+
+1.3
+- Added autoupdate
+- Now bot requires tqdm library
+- Removed useless imports
+- Finalized merge with autoupdate test branch
+
+1.2
+- Patched gif creation bypass for banned users
+
+1.1
+- New "chatlog" command
+- Camera reaction doesnt get auto added to attachments
+- Fixed admin dm's message (feature that sends user messages between them and bot)
+- Fixed reaction gif crediting
+- New logging function
+- Fixed "chatlog" embed issues
+
+1.0
+- Fixed bot responding to users replying to him
+- Added config
+- Added russian roulette back (after some tests)
+- Added "pingdm" (dm's certain user on ping)
+- Filled up "help" command
+- Added "readlog" command
+- Added telemetry back
+- Cleaned up variables
+- Ban logs for using admin commands
+- Modularized entire code into imports (old versions not available)

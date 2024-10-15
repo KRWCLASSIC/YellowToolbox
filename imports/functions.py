@@ -21,12 +21,13 @@ config = configparser.ConfigParser()
 config.read('config.ini')
 
 # Some variables
+admin_ids = [int(id.strip()) for id in config['settings']['admin_ids'].split(',')]
 max_file_size = int(config['settings']['max_file_size']) * 1024 * 1024
 telemetry_enabled = str(config['telemetry']['enabled'])
 telemetry_file_path = config['telemetry']['file_path']
 quote_channel_id = int(config['quotes']['channel_id'])
-admin_id = int(config['settings']['admin_id'])
-embed_color = int(config['quotes']['embed_color'], 16)  # Convert hex string to integer
+embed_color = int(config['quotes']['embed_color'], 16)
+quotes_enabled = str(config['quotes']['enabled'])
 ban_list = config['settings']['ban_list']
 wrong_mp3 = config['media']['wrong_mp3']
 
@@ -175,7 +176,7 @@ async def handle_ban_command(message):
         await message.reply("This command can only be used in a server.")
         return
     
-    if message.author.id != admin_id:
+    if message.author.id not in admin_ids:
         await message.reply("You do not have permission to use this command.")
         print_and_log(f'Banned {message.author.id} due to attempted use of admin command!')
         BLOCKED_USER_IDS = get_blocked_user_ids()
@@ -204,7 +205,7 @@ async def handle_unban_command(message):
         await message.reply("This command can only be used in a server.")
         return
     
-    if message.author.id != admin_id:
+    if message.author.id not in admin_ids:
         await message.reply("You do not have permission to use this command.")
         print_and_log(f'Banned {message.author.id} due to attempted use of admin command!')
         BLOCKED_USER_IDS = get_blocked_user_ids()
@@ -233,7 +234,7 @@ async def handle_invite_command(message):
         await message.reply("This command can only be used in a server.")
         return
  
-    if message.author.id != admin_id:
+    if message.author.id not in admin_ids:
         await message.reply("You do not have permission to use this command.")
         print_and_log(f'Banned {message.author.id} due to attempted use of admin command!')
         BLOCKED_USER_IDS = get_blocked_user_ids()
@@ -338,7 +339,7 @@ async def handle_russian_roulette_command(message):
     print_and_log(f"Someone played russian roulette | Server: {guild_name} | Channel: {channel_name} | User: {username}")
 
 async def handle_readlog_command(message, number: int):
-    if message.author.id != admin_id:
+    if message.author.id not in admin_ids:
         await message.reply("You do not have permission to use this command.")
         print_and_log(f'Banned {message.author.id} due to attempted use of admin command!')
         BLOCKED_USER_IDS = get_blocked_user_ids()
@@ -384,7 +385,7 @@ async def handle_readlog_command(message, number: int):
         await message.channel.send(f"An error occurred: {str(e)}")
 
 async def handle_chatlog_command(message, user_id_or_all: str):
-    if message.author.id != admin_id:
+    if message.author.id not in admin_ids:
         await message.reply("You do not have permission to use this command.")
         print_and_log(f'Banned {message.author.id} due to attempted use of admin command!')
         BLOCKED_USER_IDS = get_blocked_user_ids()
@@ -443,7 +444,7 @@ async def handle_chatlog_command(message, user_id_or_all: str):
                     json.dump(chat_logs, file, indent=4)
 
                 # Send the chat log to the admin user, including a mention of the user
-                admin_user = bot.get_user(admin_id)
+                admin_user = bot.get_user(admin_ids[0])
                 if admin_user:
                     admin_dm_channel = await admin_user.create_dm()
                     await admin_dm_channel.send(
@@ -457,6 +458,11 @@ async def handle_chatlog_command(message, user_id_or_all: str):
         print(f"Error occurred: {str(e)}")
 
 async def handle_quote_command(message):
+    # Check if quoting is enabled
+    if quotes_enabled.lower() != 'True':
+        await message.reply("Quoting is currently disabled.")
+        return
+
     # Check if the message is a reply
     if not message.reference or not message.reference.resolved:
         await message.reply("Please reply to a message you want to quote.")
