@@ -23,7 +23,7 @@ def files_are_different(file1, file2):
        ext2 in ['.py', '.txt', '.md', '.ini', '.gitignore', '.json']:
         return normalize_line_endings(file1) != normalize_line_endings(file2)
     else:
-        # For binary files, compare their contents byte by byte
+        # For binary files, compare their contents byte by bytel
         with open(file1, 'rb') as f1, open(file2, 'rb') as f2:
             return f1.read() != f2.read()
 
@@ -35,12 +35,22 @@ def update_config_file(latest_file, local_file):
     latest_config = configparser.ConfigParser()
     latest_config.read(latest_file)
 
+    # Iterate over sections in the latest config
     for section in latest_config.sections():
         if not config.has_section(section):
             config.add_section(section)
-        # Add or update keys from the latest config
+        
+        # Add keys from the latest config if they don't exist in the local config
         for key, value in latest_config.items(section):
-            config.set(section, key, value)
+            if not config.has_option(section, key):
+                config.set(section, key, value)
+
+    # Remove keys from the local config that are not in the latest config
+    for section in config.sections():
+        if latest_config.has_section(section):
+            for key in config.options(section):
+                if not latest_config.has_option(section, key):
+                    config.remove_option(section, key)
 
     with open(local_file, 'w') as configfile:
         config.write(configfile)
