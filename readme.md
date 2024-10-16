@@ -1,8 +1,8 @@
 # Yellow Toolbox `1.7`
 
-![Static Badge](https://img.shields.io/badge/Stable_Version-1.7-yellow)
-![Static Badge](https://img.shields.io/badge/Code_Version-1.7-yellow)
-![Static Badge](https://img.shields.io/badge/Maintainer-KRWCLASSIC-green)
+[![Static Badge](https://img.shields.io/badge/Stable_Version-1.7-yellow)](https://github.com/KRWCLASSIC/YellowToolbox/tree/bfd789c3e0e9469d8c210ac35331394c98639fca)
+[![Static Badge](https://img.shields.io/badge/Code_Version-1.7-yellow)](https://github.com/KRWCLASSIC/YellowToolbox)
+[![Static Badge](https://img.shields.io/badge/Maintainer-KRWCLASSIC-green)](https://github.com/KRWCLASSIC)
 
 ![Static Badge](https://img.shields.io/badge/Current_State-Alpha-red)
 [![Security: bandit](https://img.shields.io/badge/Security-bandit-yellow.svg)](https://github.com/PyCQA/bandit)
@@ -10,10 +10,10 @@
 This bot is designed to enhance your Discord server experience with a variety of fun and useful features. Below, you'll find an overview of the features, setup instructions, and how to contribute to the project.
 
 <sub>For changes check the <a href="https://github.com/KRWCLASSIC/YellowToolbox/blob/main/files/changelog.txt">changelog!</a></sub><br>
-<sub><a href="https://github.com/KRWCLASSIC/YellowToolbox">"Code" Versions</a> contain all the hotpatches and newest features, that might contain bugs!</sub>
+<sub>"Code" Versions contain all the hotpatches and newest features, that might contain bugs!</sub>
 <details>
 <summary>Stable Versions:</summary>
-<a href="no link">Latest - 1.7</a><br>
+<a href="https://github.com/KRWCLASSIC/YellowToolbox/tree/bfd789c3e0e9469d8c210ac35331394c98639fca">Latest - 1.7</a><br>
 <sub><a href="https://github.com/KRWCLASSIC/YellowToolbox/tree/5192439a3dbbce54edde1440fac6ceee54754c0f">1.6</a></sub><br>
 <sub><a href="https://github.com/KRWCLASSIC/YellowToolbox/tree/9e04f9060edae2a102e37ae245e6c767b8328b5e">1.5</a></sub><br>
 <sub><a href="https://github.com/KRWCLASSIC/YellowToolbox/tree/d135c289d90f62d83e2993bc044af8af70682e83">1.4</a></sub><br>
