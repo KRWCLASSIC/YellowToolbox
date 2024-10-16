@@ -16,6 +16,7 @@ Plans:
 - Improvements to checking files
 - For the 999th time changed variable order
 - Fixed pingdm sending dms to all users no matter if person was pinged or not
+- "CMG", Now responding to a message with camera emoji also creates gif (toggleable)
 
 1.6
 - Moved req.txt to files folder

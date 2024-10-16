@@ -17,6 +17,7 @@ target_ids = [int(id.strip()) for id in config['nicktrack']['target_ids'].split(
 admin_ids = [int(id.strip()) for id in config['settings']['admin_ids'].split(',')]
 forcenick_enabled = str(config['forcenick']['forcenick_enabled'])
 nicktrack_enabled = str(config['nicktrack']['nicktrack_enabled'])
+cmg_enabled = str(config['settings']['camera_message_gifs_enabled'])
 enable_pingdm = str(config['pingdm']['enabled'])
 forcenick = str(config['forcenick']['nick'])
 kys_gif = config['media']['kys_gif']
@@ -127,6 +128,13 @@ async def on_message(message):
 
                 except discord.Forbidden:
                     print("I can't send a DM to targeted user.")
+
+    # Check for camera emoji message
+    if cmg_enabled == "True":
+        if message.content.strip() == '📷' and message.reference and message.reference.resolved:
+            original_message = message.reference.resolved
+            if original_message.attachments:
+                await handle_gif_creation(original_message, [message.author])
 
     if bot.user in message.mentions and message.author != bot.user:
         content = message.content.lower()

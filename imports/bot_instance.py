@@ -11,7 +11,7 @@ intents.members = True
 intents.guilds = True
 
 # Version Variable
-ver = 'pre-1.7'
+ver = '1.7'
 
 # Register the bot
 bot = commands.Bot(command_prefix="", intents=intents)
