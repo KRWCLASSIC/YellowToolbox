@@ -1,4 +1,5 @@
 # External Imports
+from datetime import datetime
 from pathlib import Path
 from tqdm import tqdm
 import requests
@@ -17,15 +18,26 @@ def files_are_different(file1, file2):
     ext1 = file1.suffix.lower()
     ext2 = file2.suffix.lower()
 
-    if ext1 in ['.py', '.txt', '.md', '.ini', '.gitignore', '.json'] and \
-       ext2 in ['.py', '.txt', '.md', '.ini', '.gitignore', '.json']:
+    if ext1 in ['.py', '.txt', '.md', '.toml', '.json'] and \
+       ext2 in ['.py', '.txt', '.md', '.toml', '.json']:
         return normalize_line_endings(file1) != normalize_line_endings(file2)
     else:
         with open(file1, 'rb') as f1, open(file2, 'rb') as f2:
             return f1.read() != f2.read()
 
+# Function to create a backup of the configuration file
+def backup_file(file_path):
+    backup_dir = Path("bak")
+    backup_dir.mkdir(exist_ok=True)
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    backup_file_path = backup_dir / f"{timestamp}_{file_path.name}.bak"
+    shutil.copy2(file_path, backup_file_path)
+    print(f"Backup created: {backup_file_path}")
+
 # Function to update TOML file
 def update_toml_file(latest_file, local_file):
+    backup_file(local_file)  # Create a backup before updating
+
     with open(latest_file, 'r') as f:
         latest_config = toml.load(f)
     
@@ -84,8 +96,8 @@ def update():
                 local_file.parent.mkdir(parents=True, exist_ok=True)
                 shutil.copy2(latest_file, local_file)
             else:
-                if relative_path.name == "files/important/config.toml":
-                    update_toml_file(latest_file, local_file)
+                if relative_path.name == "config.toml":
+                    backup_file(local_file)  # Only backup the config file
                 else:
                     if files_are_different(latest_file, local_file):
                         shutil.copy2(latest_file, local_file)
