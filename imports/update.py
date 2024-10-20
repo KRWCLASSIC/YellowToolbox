@@ -6,7 +6,6 @@ import requests
 import zipfile
 import shutil
 import os
-import toml
 
 # Function to normalize line endings
 def normalize_line_endings(file_path):
@@ -33,36 +32,6 @@ def backup_file(file_path):
     backup_file_path = backup_dir / f"{timestamp}_{file_path.name}.bak"
     shutil.copy2(file_path, backup_file_path)
     print(f"Backup created: {backup_file_path}")
-
-# Function to update TOML file
-def update_toml_file(latest_file, local_file):
-    backup_file(local_file)  # Create a backup before updating
-
-    with open(latest_file, 'r') as f:
-        latest_config = toml.load(f)
-    
-    with open(local_file, 'r') as f:
-        local_config = toml.load(f)
-
-    def sync_configs(latest, local):
-        # Add new keys and update existing ones
-        for key, value in latest.items():
-            if isinstance(value, dict):
-                node = local.setdefault(key, {})
-                sync_configs(value, node)
-            else:
-                if key not in local:
-                    local[key] = value
-
-        # Remove keys that are no longer in the latest config
-        keys_to_remove = [key for key in local if key not in latest]
-        for key in keys_to_remove:
-            del local[key]
-
-    sync_configs(latest_config, local_config)
-
-    with open(local_file, 'w') as f:
-        toml.dump(local_config, f)
 
 # Main update function
 def update():
