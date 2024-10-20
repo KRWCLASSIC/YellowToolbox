@@ -7,11 +7,11 @@ from imports.functions import *
 from imports.global_setup import bot, ver, config
 
 # Some variables and arrays
-reaction_gif_enabled = config['gifs']['reaction_gif_enabled']
-forcenick_enabled = config['forcenick']['forcenick_enabled']
-nicktrack_enabled = config['nicktrack']['nicktrack_enabled']
-cmg_enabled = config['gifs']['camera_message_gifs_enabled']
+reaction_gif_enabled = config['gifs']['reaction_enabled']
+forcenick_enabled = config['forcenick']['enabled']
+nicktrack_enabled = config['nicktrack']['enabled']
 tracked_user_ids = config['pingdm']['target_ids']
+cmg_enabled = config['gifs']['message_enabled']
 target_ids = config['nicktrack']['target_ids']
 forcenick = str(config['forcenick']['nick'])
 enable_pingdm = config['pingdm']['enabled']

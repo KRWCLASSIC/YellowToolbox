@@ -1,32 +1,34 @@
 [settings]
-ban_list = "files/important/ban.txt"
 admin_ids = [495999626143465472]
-max_file_size = 9
 autoupdate = "n"
+
+[files]
+ban_list = "files/important/ban.txt"
 
 [media]
 wrong_mp3 = "files/media/wrong.mp3"
 kys_gif = "files/media/kys.gif"
 
+[telemetry]
+file_path = "files/misc/telemetry.json"
+enabled = true
+
 [gifs]
-camera_message_gifs_enabled = true
-reaction_gif_enabled = true
-gif_creation_enabled = true
+reaction_enabled = true
+message_enabled = true
+max_file_size = 9
+enabled = true
 
 [nicktrack]
 target_ids = [718374265824608286]
-nicktrack_enabled = true
+enabled = true
 
 [forcenick]
-forcenick_enabled = false
+enabled = false
 nick = "cweluś"
 
 [pingdm]
 target_ids = [713109100623429733, 495999626143465472]
-enabled = true
-
-[telemetry]
-file_path = "files/misc/telemetry.json"
 enabled = true
 
 [quotes]

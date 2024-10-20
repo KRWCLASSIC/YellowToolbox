@@ -16,16 +16,16 @@ from imports.functions import *
 from imports.global_setup import bot, config
 
 # Some variables
-max_file_size = int(config['settings']['max_file_size']) * 1024 * 1024
-gif_creation_enabled = config['gifs']['gif_creation_enabled']
+max_file_size = int(config['gifs']['max_file_size']) * 1024 * 1024
 telemetry_file_path = config['telemetry']['file_path']
 quote_channel_id = int(config['quotes']['channel_id'])
 embed_color = int(config['quotes']['embed_color'], 16)
 telemetry_enabled = config['telemetry']['enabled']
+gif_creation_enabled = config['gifs']['enabled']
 quotes_enabled = config['quotes']['enabled']
 admin_ids = config['settings']['admin_ids']
-ban_list = config['settings']['ban_list']
 wrong_mp3 = config['media']['wrong_mp3']
+ban_list = config['files']['ban_list']
 
 # Async Functions
 async def handle_gif_creation(message, credited_users):

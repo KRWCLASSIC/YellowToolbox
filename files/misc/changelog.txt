@@ -1,4 +1,8 @@
 Plans:
+- Settings/Config command (1.9)
+- Improve ban command (Time bans etc.) (1.9)
+- Per-Command exclude list (1.9/2.0)
+- Better permission system (2.0)
 - Move over to cogs (2.0)
 - Move over to slashcommands (2.0)
 - Create KRW's Bot Template or smth | YellowTemplate 😈 (2.X)
@@ -17,12 +21,14 @@ Plans:
 - Changed config loading to be global and localized inside bot_instance file
 - Fixed forcenick_enabled (now it actually does anything)
 - Moved over some initalization parts to global_setup
-- Updated autoupdate code
+- Made autoupdate code worse
 - Renamed bot_instance to global_setup
 - Moved gif related settings into its own section
-- (Yes i know that setup.py doesnt work)
 - Added an option disable reaction gifs
 - Added an option to completly stop gif creation (lockdown)
+- Moved ban list into new "files" section
+- Changed all "_enabled" values to just enabled etc.
+- (Yes i know that setup.py doesnt work, to fix in 1.9)
 
 1.7
 - Updated update script to better handle config updates
