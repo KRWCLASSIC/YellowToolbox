@@ -11,6 +11,7 @@ kys_gif = "files/media/kys.gif"
 [gifs]
 camera_message_gifs_enabled = true
 reaction_gif_enabled = true
+gif_creation_enabled = true
 
 [nicktrack]
 target_ids = [718374265824608286]

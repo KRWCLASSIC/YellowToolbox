@@ -17,6 +17,7 @@ from imports.global_setup import bot, config
 
 # Some variables
 max_file_size = int(config['settings']['max_file_size']) * 1024 * 1024
+gif_creation_enabled = config['gifs']['gif_creation_enabled']
 telemetry_file_path = config['telemetry']['file_path']
 quote_channel_id = int(config['quotes']['channel_id'])
 embed_color = int(config['quotes']['embed_color'], 16)
@@ -28,7 +29,7 @@ wrong_mp3 = config['media']['wrong_mp3']
 
 # Async Functions
 async def handle_gif_creation(message, credited_users):
-    if message.attachments:
+    if gif_creation_enabled and message.attachments:
         for attachment in message.attachments:
             file_path = f"./{attachment.filename}"
             gif_path = file_path.rsplit('.', 1)[0] + ".gif"
@@ -81,7 +82,7 @@ async def handle_gif_creation(message, credited_users):
                     os.remove(gif_path)
 
 async def handle_gif_command(message):
-    if message.attachments:
+    if gif_creation_enabled and message.attachments:
         for attachment in message.attachments:
             file_path = f"./{attachment.filename}"
             gif_path = file_path.rsplit('.', 1)[0] + ".gif"
