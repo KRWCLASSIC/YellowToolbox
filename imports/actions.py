@@ -7,6 +7,7 @@ from imports.functions import *
 from imports.global_setup import bot, ver, config
 
 # Some variables and arrays
+reaction_gif_enabled = config['gifs']['reaction_gif_enabled']
 forcenick_enabled = config['forcenick']['forcenick_enabled']
 nicktrack_enabled = config['nicktrack']['nicktrack_enabled']
 cmg_enabled = config['gifs']['camera_message_gifs_enabled']
@@ -42,7 +43,7 @@ async def on_reaction_add(reaction, user):
     if reaction.message.author == bot.user:
         return
 
-    if str(reaction.emoji) == '📷':
+    if reaction_gif_enabled and str(reaction.emoji) == '📷':
 
         BLOCKED_USER_IDS = get_blocked_user_ids()
         if reaction.message.author.id in BLOCKED_USER_IDS:

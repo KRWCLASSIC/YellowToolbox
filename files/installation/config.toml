@@ -10,6 +10,7 @@ kys_gif = "files/media/kys.gif"
 
 [gifs]
 camera_message_gifs_enabled = true
+reaction_gif_enabled = true
 
 [nicktrack]
 target_ids = [718374265824608286]
@@ -38,5 +39,4 @@ token = "files/important/token.txt"
 # Remember to create token file and paste your bot token there!
 # These settings are made for my Discord server, feel free to change them! (especially id's!)
 # Quotes embed color is hex value!
-# Please use True/False (case sensitive) due to it being string comparing not bool's
 # For autoupdate there are 3 valid states: y, n and literaly nothing, then it will prompt for update each time.
