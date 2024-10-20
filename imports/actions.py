@@ -4,7 +4,7 @@ import re
 
 # Internal Imports
 from imports.functions import *
-from imports.bot_instance import *
+from imports.global_setup import bot, ver, config
 
 # Some variables and arrays
 cmg_enabled = config['settings']['camera_message_gifs_enabled']

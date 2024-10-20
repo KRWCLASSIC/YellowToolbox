@@ -6,6 +6,7 @@ import requests
 import zipfile
 import shutil
 import os
+import toml
 
 # Converting from CRLF to LF (github vs windows)
 def normalize_line_endings(file_path):
@@ -27,33 +28,31 @@ def files_are_different(file1, file2):
         with open(file1, 'rb') as f1, open(file2, 'rb') as f2:
             return f1.read() != f2.read()
 
-# Function to update config.ini without overriding existing values
-def update_config_file(latest_file, local_file):
-    config = configparser.ConfigParser()
-    config.read(local_file)
+# Function to update TOML file
+def update_toml_file(latest_file, local_file):
+    # Load the latest and local TOML configurations
+    with open(latest_file, 'r') as f:
+        latest_config = toml.load(f)
+    
+    with open(local_file, 'r') as f:
+        local_config = toml.load(f)
 
-    latest_config = configparser.ConfigParser()
-    latest_config.read(latest_file)
+    # Update local config with values from the latest config
+    def update_dict(latest, local):
+        for key, value in latest.items():
+            if isinstance(value, dict):
+                # If the key is a dictionary, recurse
+                node = local.setdefault(key, {})
+                update_dict(value, node)
+            else:
+                # Otherwise, set the value if it doesn't exist
+                local.setdefault(key, value)
 
-    # Iterate over sections in the latest config
-    for section in latest_config.sections():
-        if not config.has_section(section):
-            config.add_section(section)
-        
-        # Add keys from the latest config if they don't exist in the local config
-        for key, value in latest_config.items(section):
-            if not config.has_option(section, key):
-                config.set(section, key, value)
+    update_dict(latest_config, local_config)
 
-    # Remove keys from the local config that are not in the latest config
-    for section in config.sections():
-        if latest_config.has_section(section):
-            for key in config.options(section):
-                if not latest_config.has_option(section, key):
-                    config.remove_option(section, key)
-
-    with open(local_file, 'w') as configfile:
-        config.write(configfile)
+    # Write the updated local config back to the file
+    with open(local_file, 'w') as f:
+        toml.dump(local_config, f)
 
 # Update
 def update():
@@ -88,13 +87,13 @@ def update():
             local_file = local_dir / relative_path
             
             if not local_file.exists():
-                # Step 5: Add new files
+                # Add new files
                 local_file.parent.mkdir(parents=True, exist_ok=True)
                 shutil.copy2(latest_file, local_file)
             else:
-                # Special handling for config.ini
-                if relative_path.name == "config.ini":
-                    update_config_file(latest_file, local_file)
+                # Special handling for config.toml
+                if relative_path.name == "config.toml":
+                    update_toml_file(latest_file, local_file)
                 else:
                     # Compare file contents using the updated function
                     if files_are_different(latest_file, local_file):

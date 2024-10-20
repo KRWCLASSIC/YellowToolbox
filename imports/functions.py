@@ -13,7 +13,7 @@ import re
 
 # Internal Imports
 from imports.functions import *
-from imports.bot_instance import *
+from imports.global_setup import bot, config
 
 # Some variables
 max_file_size = int(config['settings']['max_file_size']) * 1024 * 1024
