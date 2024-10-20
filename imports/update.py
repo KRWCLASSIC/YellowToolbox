@@ -32,21 +32,18 @@ def update_toml_file(latest_file, local_file):
     with open(local_file, 'r') as f:
         local_config = toml.load(f)
 
-    def update_dict(latest, local):
-        # Add new keys and update existing ones
+    def merge_configs(latest, local):
         for key, value in latest.items():
             if isinstance(value, dict):
+                # If the key is a dictionary, recurse
                 node = local.setdefault(key, {})
-                update_dict(value, node)
+                merge_configs(value, node)
             else:
-                local[key] = value  # Update existing values
+                # Only set the value if it doesn't exist in the local config
+                if key not in local:
+                    local[key] = value
 
-        # Remove keys that are no longer in the latest config
-        keys_to_remove = [key for key in local if key not in latest]
-        for key in keys_to_remove:
-            del local[key]
-
-    update_dict(latest_config, local_config)
+    merge_configs(latest_config, local_config)
 
     with open(local_file, 'w') as f:
         toml.dump(local_config, f)
