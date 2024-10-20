@@ -1,6 +1,7 @@
 # External Imports
-import discord
 from discord.ext import commands
+import discord
+import toml
 
 # Enable some permissions
 intents = discord.Intents.default()
@@ -10,8 +11,11 @@ intents.messages = True
 intents.members = True
 intents.guilds = True
 
+# Load the config file (global)
+config = toml.load('files/installation/config.toml')
+
 # Version Variable
-ver = '1.7'
+ver = 'pre-1.8'
 
 # Register the bot
 bot = commands.Bot(command_prefix="", intents=intents)

@@ -1,10 +1,10 @@
-# Yellow Toolbox `1.7`
+# Yellow Toolbox `pre-1.8`
 
 [![Static Badge](https://img.shields.io/badge/Stable_Version-1.7-yellow)](https://github.com/KRWCLASSIC/YellowToolbox/tree/bfd789c3e0e9469d8c210ac35331394c98639fca)
-[![Static Badge](https://img.shields.io/badge/Code_Version-1.7-yellow)](https://github.com/KRWCLASSIC/YellowToolbox)
+[![Static Badge](https://img.shields.io/badge/Code_Version-pre--1.8-yellow)](https://github.com/KRWCLASSIC/YellowToolbox)
 [![Static Badge](https://img.shields.io/badge/Maintainer-KRWCLASSIC-green)](https://github.com/KRWCLASSIC)
 
-![Static Badge](https://img.shields.io/badge/Current_State-Alpha-red)
+[![Static Badge](https://img.shields.io/badge/Current_State-Alpha-red)](where_u_goin_dawg)
 [![Security: bandit](https://img.shields.io/badge/Security-bandit-yellow.svg)](https://github.com/PyCQA/bandit)
 
 This bot is designed to enhance your Discord server experience with a variety of fun and useful features. Below, you'll find an overview of the features, setup instructions, and how to contribute to the project.
@@ -26,7 +26,7 @@ This bot is designed to enhance your Discord server experience with a variety of
 ## Features
 
 - Russian Roulette: A fun game where users can test their luck (Kicks the user from server!).
-- GIF Creation: Convert attached images or videos to GIFs. (Command and "📷" reaction)
+- GIF Creation: Convert attached images or videos to GIFs. (Command & "📷" message or reaction)
 - Ban/Unban Users: Admin can ban or unban from using most of the bot's features.
 - Nickname Tracking: Track and enforce nickname changes for specific user.
 - Invite Links: Generate one-time use invite links. (Temporary)
@@ -44,7 +44,7 @@ Also you need FFmpeg to be installed on the machine!
 
 ## Config
 
-`config.ini`
+`config.toml`
 
 ## Commands
 

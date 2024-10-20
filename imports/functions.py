@@ -2,7 +2,6 @@
 from urllib.parse import urlparse, urlunparse
 from moviepy.editor import VideoFileClip
 from datetime import datetime
-import configparser
 import subprocess
 import discord
 import asyncio
@@ -14,20 +13,16 @@ import re
 
 # Internal Imports
 from imports.functions import *
-from imports.bot_instance import bot
-
-# Load the config file
-config = configparser.ConfigParser()
-config.read('config.ini')
+from imports.bot_instance import *
 
 # Some variables
-admin_ids = [int(id.strip()) for id in config['settings']['admin_ids'].split(',')]
 max_file_size = int(config['settings']['max_file_size']) * 1024 * 1024
-telemetry_enabled = str(config['telemetry']['enabled'])
 telemetry_file_path = config['telemetry']['file_path']
 quote_channel_id = int(config['quotes']['channel_id'])
 embed_color = int(config['quotes']['embed_color'], 16)
-quotes_enabled = str(config['quotes']['enabled'])
+telemetry_enabled = config['telemetry']['enabled']
+quotes_enabled = config['quotes']['enabled']
+admin_ids = config['settings']['admin_ids']
 ban_list = config['settings']['ban_list']
 wrong_mp3 = config['media']['wrong_mp3']
 
@@ -143,6 +138,7 @@ async def handle_gif_command(message):
         await message.delete()
     except:
         return
+    
 async def handle_everyone_command(message):
     if message.guild is None:
         await message.reply("This command can only be used in a server.")
@@ -459,7 +455,7 @@ async def handle_chatlog_command(message, user_id_or_all: str):
 
 async def handle_quote_command(message):
     # Check if quoting is enabled
-    if quotes_enabled.lower() != 'True':
+    if quotes_enabled:
         await message.reply("Quoting is currently disabled.")
         return
 
@@ -504,31 +500,31 @@ def remove_pycache():
             if dir == '__pycache__':
                 shutil.rmtree(os.path.join(root, dir))
 
-def check_files():
-    # Collect all file paths from the config
+def check_files(config, base_path=''):
     missing_files = []
 
-    # Iterate over all sections and keys in the config
-    for section in config.sections():
-        for key, value in config.items(section):
-            # Check if the value is a file path
-            if os.path.splitext(value)[1]:  # Check if there's a file extension
-                if not os.path.exists(value):
-                    missing_files.append(value)
+    def scan_config(d, path_prefix=''):
+        for key, value in d.items():
+            if isinstance(value, dict):
+                # Recursively scan nested dictionaries
+                scan_config(value, path_prefix)
+            elif isinstance(value, str) and ('.' in value or '/' in value or '\\' in value):
+                # Check if the value looks like a file path
+                file_path = os.path.join(base_path, value)
+                if not os.path.exists(file_path):
+                    missing_files.append(file_path)
 
-    # Check if token.txt is missing and print a warning message
-    if 'files/token.txt' not in missing_files and not os.path.exists('files/token.txt'):
-        print("Warning: token.txt file is missing. Please paste your bot token there.")
+    scan_config(config)
 
     if missing_files:
-        print("The following files are missing:")
+        print("Missing files:")
+
         for file in missing_files:
-            print(f"- {file}")
-            # Attempt to create the missing file
-            with open(file, 'w') as f:
-                f.write("")  # Create an empty file
-            print(f"Created {file} as an empty file.")
-        exit(1)
+            print(f"  {file}")
+
+        exit()
+    else:
+        print("All required files are present.")
 
 def get_blocked_user_ids():
     try:

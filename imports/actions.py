@@ -1,25 +1,20 @@
 # External Imports
-import configparser
 import discord
 import re
 
 # Internal Imports
 from imports.functions import *
-from imports.bot_instance import bot, ver
-
-# Load the config file
-config = configparser.ConfigParser()
-config.read('config.ini')
+from imports.bot_instance import *
 
 # Some variables and arrays
-tracked_user_ids = [int(id.strip()) for id in config['pingdm']['target_ids'].split(',')]
-target_ids = [int(id.strip()) for id in config['nicktrack']['target_ids'].split(',')]
-admin_ids = [int(id.strip()) for id in config['settings']['admin_ids'].split(',')]
-forcenick_enabled = str(config['forcenick']['forcenick_enabled'])
-nicktrack_enabled = str(config['nicktrack']['nicktrack_enabled'])
-cmg_enabled = str(config['settings']['camera_message_gifs_enabled'])
-enable_pingdm = str(config['pingdm']['enabled'])
+cmg_enabled = config['settings']['camera_message_gifs_enabled']
+forcenick_enabled = config['forcenick']['forcenick_enabled']
+nicktrack_enabled = config['nicktrack']['nicktrack_enabled']
+tracked_user_ids = config['pingdm']['target_ids']
+target_ids = config['nicktrack']['target_ids']
 forcenick = str(config['forcenick']['nick'])
+enable_pingdm = config['pingdm']['enabled']
+admin_ids = config['settings']['admin_ids']
 kys_gif = config['media']['kys_gif']
 camera_clicks = {}
 
@@ -69,7 +64,7 @@ async def on_reaction_add(reaction, user):
             await handle_gif_creation(message, camera_clicks[reaction.message.id])
 
 async def on_member_update(before: discord.Member, after: discord.Member):
-    if nicktrack_enabled != 'True':
+    if not nicktrack_enabled:
         return
 
     # Check if the nickname has changed
@@ -80,8 +75,9 @@ async def on_member_update(before: discord.Member, after: discord.Member):
             await channel.send(f"{', '.join(f'<@{admin_id}>' for admin_id in admin_ids)}, User {after.name} got their nickname changed from '{before.nick}' to '{after.nick}'")
 
     # Forced nickname change mechanism (only if enabled)
-    if after.id in target_ids and after.nick != f"{forcenick}":
-        await after.edit(nick=f"{forcenick}")
+    if forcenick_enabled:
+        if after.id in target_ids and after.nick != f"{forcenick}":
+            await after.edit(nick=f"{forcenick}")
 
 async def on_message(message):
     BLOCKED_USER_IDS = get_blocked_user_ids()
@@ -104,7 +100,7 @@ async def on_message(message):
                 except discord.Forbidden:
                     print(f"I can't send a DM to admin with ID {admin_id}.")
 
-    if enable_pingdm == 'True':
+    if enable_pingdm:
         for user in message.mentions:
             if user.id in tracked_user_ids:
                 try:
@@ -130,7 +126,7 @@ async def on_message(message):
                     print("I can't send a DM to targeted user.")
 
     # Check for camera emoji message
-    if cmg_enabled == "True":
+    if cmg_enabled:
         if message.content.strip() == '📷' and message.reference and message.reference.resolved:
             original_message = message.reference.resolved
             if original_message.attachments:

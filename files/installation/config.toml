@@ -1,0 +1,40 @@
+[settings]
+camera_message_gifs_enabled = true
+admin_ids = [495999626143465472]
+ban_list = "files/important/ban.txt"
+max_file_size = 9
+autoupdate = "n"
+
+[media]
+wrong_mp3 = "files/media/wrong.mp3"
+kys_gif = "files/media/kys.gif"
+
+[nicktrack]
+target_ids = [718374265824608286]
+nicktrack_enabled = true
+
+[forcenick]
+forcenick_enabled = false
+nick = "cweluś"
+
+[pingdm]
+target_ids = [713109100623429733, 495999626143465472]
+enabled = true
+
+[telemetry]
+file_path = "files/misc/telemetry.json"
+enabled = true
+
+[quotes]
+channel_id = 1261116961446952991
+embed_color = "0x3498DB"
+enabled = true
+
+[token]
+token = "files/important/token.txt"
+
+# Remember to create token file and paste your bot token there!
+# These settings are made for my Discord server, feel free to change them! (especially id's!)
+# Quotes embed color is hex value!
+# Please use True/False (case sensitive) due to it being string comparing not bool's
+# For autoupdate there are 3 valid states: y, n and literaly nothing, then it will prompt for update each time.

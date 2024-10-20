@@ -2,7 +2,7 @@ import os
 import subprocess
 
 # Define the files to be created
-files_to_create = ['files/ban.txt', 'files/telemetry.json', 'files/token.txt']
+files_to_create = ['files/important/ban.txt', 'files/misc/telemetry.json', 'files/important/token.txt']
 
 # Create the necessary files if they don't exist
 for file in files_to_create:
@@ -16,13 +16,13 @@ for file in files_to_create:
 
 # Prompt the user for the token and save it to token.txt
 token = input("Please enter your bot token: ")
-with open('files/token.txt', 'w') as f:
+with open('files/important/token.txt', 'w') as f:
     f.write(token)
-print("Token saved to files/token.txt")
+print("Token saved to files/important/token.txt")
 
 # Check and install required packages
 def install_packages():
-    with open('files/requirements.txt', 'r') as f:
+    with open('files/installation/requirements.txt', 'r') as f:
         packages = f.read().splitlines()
     
     for package in packages:

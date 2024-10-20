@@ -1,8 +1,8 @@
 # External Imports
-import configparser
+# -
 
 # Internal Imports
-from imports.bot_instance import bot
+from imports.bot_instance import *
 from imports.actions import *
 from imports.update import *
 
@@ -10,11 +10,7 @@ from imports.update import *
 remove_pycache()
 
 # Check if all importnant files exist
-check_files()
-
-# Load the config file
-config = configparser.ConfigParser()
-config.read('config.ini')
+check_files(config)
 
 # Load autoupdate variable
 update_input = str(config['settings']['autoupdate'])

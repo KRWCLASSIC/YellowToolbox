@@ -1,13 +1,21 @@
 Plans:
-- Switch to YAML/TOML config (1.8)
-- Move config file to files folder and rename it to ".config" (1.8/1.9)
 - Move over to cogs (2.0)
 - Move over to slashcommands (2.0)
 - Create KRW's Bot Template or smth | YellowTemplate 😈 (2.X)
 - YellowBoombox (After major changes in 2.X of YellowToolbox)
 
 1.8
-- 
+- Switched over to TOML
+- Moved config file to "files" folder
+- Organized files
+- Removed need to load config for each file
+- Updated check_files function to support TOML
+- Finally moved to real bool's
+- Now TOML is required package
+- For the infinite time changed variables order
+- Removed configparser package
+- Changed config loading to be global and localized inside bot_instance file
+- Fixed forcenick_enabled (now it actually does anything)
 
 1.7
 - Updated update script to better handle config updates

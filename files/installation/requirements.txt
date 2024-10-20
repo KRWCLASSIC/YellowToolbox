@@ -2,3 +2,4 @@ discord
 moviepy
 Pillow
 tqdm
+toml
