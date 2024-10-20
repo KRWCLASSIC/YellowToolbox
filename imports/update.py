@@ -33,12 +33,18 @@ def update_toml_file(latest_file, local_file):
         local_config = toml.load(f)
 
     def update_dict(latest, local):
+        # Add new keys and update existing ones
         for key, value in latest.items():
             if isinstance(value, dict):
                 node = local.setdefault(key, {})
                 update_dict(value, node)
             else:
-                local.setdefault(key, value)
+                local[key] = value  # Update existing values
+
+        # Remove keys that are no longer in the latest config
+        keys_to_remove = [key for key in local if key not in latest]
+        for key in keys_to_remove:
+            del local[key]
 
     update_dict(latest_config, local_config)
 

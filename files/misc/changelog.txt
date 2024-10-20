@@ -21,6 +21,7 @@ Plans:
 - Renamed bot_instance to global_setup
 - Moved gif related settings into its own section
 - (Yes i know that setup.py doesnt work)
+- Now you can disable reaction gifs
 
 1.7
 - Updated update script to better handle config updates
