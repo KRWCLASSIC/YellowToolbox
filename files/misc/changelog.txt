@@ -16,6 +16,9 @@ Plans:
 - Removed configparser package
 - Changed config loading to be global and localized inside bot_instance file
 - Fixed forcenick_enabled (now it actually does anything)
+- Moved over some initalization parts to global_setup
+- Updated autoupdate code
+- Renamed bot_instance to global_setup
 
 1.7
 - Updated update script to better handle config updates

@@ -7,9 +7,9 @@ from imports.functions import *
 from imports.global_setup import bot, ver, config
 
 # Some variables and arrays
-cmg_enabled = config['settings']['camera_message_gifs_enabled']
 forcenick_enabled = config['forcenick']['forcenick_enabled']
 nicktrack_enabled = config['nicktrack']['nicktrack_enabled']
+cmg_enabled = config['gifs']['camera_message_gifs_enabled']
 tracked_user_ids = config['pingdm']['target_ids']
 target_ids = config['nicktrack']['target_ids']
 forcenick = str(config['forcenick']['nick'])

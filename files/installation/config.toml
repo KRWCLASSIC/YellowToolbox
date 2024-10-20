@@ -1,13 +1,15 @@
 [settings]
-camera_message_gifs_enabled = true
-admin_ids = [495999626143465472]
 ban_list = "files/important/ban.txt"
+admin_ids = [495999626143465472]
 max_file_size = 9
 autoupdate = "n"
 
 [media]
 wrong_mp3 = "files/media/wrong.mp3"
 kys_gif = "files/media/kys.gif"
+
+[gifs]
+camera_message_gifs_enabled = true
 
 [nicktrack]
 target_ids = [718374265824608286]
