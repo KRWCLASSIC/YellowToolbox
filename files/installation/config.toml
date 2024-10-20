@@ -36,6 +36,7 @@ enabled = true
 
 [token]
 token = "files/important/token.txt"
+ineedarandomvaluefortests
 
 # Remember to create token file and paste your bot token there!
 # These settings are made for my Discord server, feel free to change them! (especially id's!)

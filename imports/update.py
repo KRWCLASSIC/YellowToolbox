@@ -83,7 +83,7 @@ def update():
                 local_file.parent.mkdir(parents=True, exist_ok=True)
                 shutil.copy2(latest_file, local_file)
             else:
-                if relative_path.name == "config.toml":
+                if relative_path.name == "files/important/config.toml":
                     update_toml_file(latest_file, local_file)
                 else:
                     if files_are_different(latest_file, local_file):
