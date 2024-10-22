@@ -8,15 +8,20 @@ from imports.global_setup import bot, ver, config
 
 # Some variables and arrays
 reaction_gif_enabled = config['gifs']['reaction_enabled']
+nicktrack_channel_id = config['nicktrack']['channel_id']
+triple_attachment = config['media']['triple_attachment']
+triple_message = config['triple_message']['message']
+triple_enabled = config['triple_message']['enabled']
 forcenick_enabled = config['forcenick']['enabled']
 nicktrack_enabled = config['nicktrack']['enabled']
+kys_attachment = config['media']['kys_attachment']
 tracked_user_ids = config['pingdm']['target_ids']
 cmg_enabled = config['gifs']['message_enabled']
 target_ids = config['nicktrack']['target_ids']
 forcenick = str(config['forcenick']['nick'])
 enable_pingdm = config['pingdm']['enabled']
 admin_ids = config['settings']['admin_ids']
-kys_gif = config['media']['kys_gif']
+consecutive_messages = {}
 camera_clicks = {}
 
 async def on_ready():
@@ -47,7 +52,7 @@ async def on_reaction_add(reaction, user):
 
         BLOCKED_USER_IDS = get_blocked_user_ids()
         if reaction.message.author.id in BLOCKED_USER_IDS:
-            await reaction.message.channel.send(f"kys {reaction.message.author.mention} ", file=discord.File(kys_gif))
+            await reaction.message.channel.send(f"kys {reaction.message.author.mention} ", file=discord.File(kys_attachment))
             return
         
         if reaction.message.id not in camera_clicks:
@@ -71,7 +76,7 @@ async def on_member_update(before: discord.Member, after: discord.Member):
     # Check if the nickname has changed
     if before.nick != after.nick and after.id in target_ids:
         # Send a message to the channel when the user changes their nickname
-        channel = after.guild.get_channel(1287007606870904914)
+        channel = after.guild.get_channel(nicktrack_channel_id)
         if channel:
             await channel.send(f"{', '.join(f'<@{admin_id}>' for admin_id in admin_ids)}, User {after.name} got their nickname changed from '{before.nick}' to '{after.nick}'")
 
@@ -88,7 +93,7 @@ async def on_message(message):
 
     if message.author.id in BLOCKED_USER_IDS:
         if bot.user in message.mentions:
-            await message.reply(f"kys", file=discord.File(kys_gif))
+            await message.reply(f"kys", file=discord.File(kys_attachment))
         return
 
     if isinstance(message.channel, discord.DMChannel) and message.author.id not in admin_ids:
@@ -133,6 +138,32 @@ async def on_message(message):
             if original_message.attachments:
                 await handle_gif_creation(original_message, [message.author])
 
+    if triple_enabled:
+        global consecutive_messages
+        normalized_content = message.content.lower()
+        normalized_triple_string = triple_message.lower()
+
+        # Check for consecutive messages
+        user_id = message.author.id
+        if user_id not in consecutive_messages:
+            consecutive_messages[user_id] = {'content': normalized_content, 'count': 1}
+        else:
+            if consecutive_messages[user_id]['content'] == normalized_content:
+                consecutive_messages[user_id]['count'] += 1
+            else:
+                consecutive_messages[user_id] = {'content': normalized_content, 'count': 1}
+
+        # Check if the message has been sent 3 times in a row
+        if consecutive_messages[user_id]['count'] == 3 and normalized_content == normalized_triple_string:
+            await message.channel.send(file=discord.File(triple_attachment))
+            
+            guild_name = message.guild.name if message.guild and message.guild.name else "None"
+            channel_name = "Direct Message" if isinstance(message.channel, discord.DMChannel) else (message.channel.name if message.channel and message.channel.name else "None")
+            username = message.author.name if message.author and message.author.name else "None"
+            
+            print_and_log(f"Tripple message got activated! | Server: {guild_name} | Channel: {channel_name} | User: {username}")
+            consecutive_messages[user_id]['count'] = 0  # Reset the count after sending the attachment
+
     if bot.user in message.mentions and message.author != bot.user:
         content = message.content.lower()
         if re.search(r'\bgif\b', content):
@@ -147,8 +178,8 @@ async def on_message(message):
             await handle_ban_command(message)
         elif re.search(r'\brr\b', content):
             await handle_russian_roulette_command(message)
-        elif re.search(r'\binvite\b', content):
-            await handle_invite_command(message)
+        elif re.search(r'\brestart\b', content):
+            await handle_restart_command(message)
         elif match := re.search(r'readlog\((\d+)\)', content):
             await handle_readlog_command(message, int(match.group(1)))
         elif match := re.search(r'chatlog\((\w+)\)', content):

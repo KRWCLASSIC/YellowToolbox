@@ -1,45 +1,61 @@
+# These settings are made for my Discord server, feel free to change them! (especially id's!)
+# This isn't supposed to be a robust bot with billions of features! For that, you can use YAGPDB...
+
+# There are 3 valid states for autoupdate: "y" - Autoupdate, "n" - No autoupdates, and "" - Prompt for update on startup.
 [settings]
 admin_ids = [495999626143465472]
 autoupdate = "n"
 
+# Some (one) files used generally by bot
 [files]
 ban_list = "files/important/ban.txt"
 
+# Media files related to the bot or other features
 [media]
-wrong_mp3 = "files/media/wrong.mp3"
-kys_gif = "files/media/kys.gif"
+triple_attachment = "files/media/krwawakula.webp"
+wrong_attachment = "files/media/wrong.mp3"
+kys_attachment = "files/media/kys.gif"
 
+# Just good ol' logging
 [telemetry]
 file_path = "files/misc/telemetry.json"
 enabled = true
 
+# General gif settings
 [gifs]
 reaction_enabled = true
 message_enabled = true
 max_file_size = 9
 enabled = true
 
+# Feature that tracks username changes
 [nicktrack]
 target_ids = [718374265824608286]
+channel_id = 1287007606870904914
 enabled = true
 
+# Enforces certain nick on all servers the bot is in
 [forcenick]
 enabled = false
-nick = "cweluś"
+nick = "gay"
 
+# Bloody marry like feature (attachment in [media] section)
+[triple_message]
+message = "krwawa kula"
+enabled = true
+
+# Sends a notification DM to the pinged users (Only targets)
 [pingdm]
 target_ids = [713109100623429733, 495999626143465472]
 enabled = true
 
+# Feature that works like starboard but without reaction limit (quote command)
+# Embed color is a hex value!
 [quotes]
 channel_id = 1261116961446952991
 embed_color = "0x3498DB"
 enabled = true
 
+# Remember to create a token file and paste your bot token there!
 [token]
 token = "files/important/token.txt"
-
-# Remember to create token file and paste your bot token there!
-# These settings are made for my Discord server, feel free to change them! (especially id's!)
-# Quotes embed color is hex value!
-# For autoupdate there are 3 valid states: y, n and literaly nothing, then it will prompt for update each time.

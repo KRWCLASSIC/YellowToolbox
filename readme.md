@@ -1,7 +1,7 @@
-# Yellow Toolbox `1.8`
+# Yellow Toolbox `pre-1.9`
 
 [![Static Badge](https://img.shields.io/badge/Stable_Version-1.8-yellow)](https://github.com/KRWCLASSIC/YellowToolbox/tree/910a1313da33aa6cd79f7d4838fd600e6b69944e)
-[![Static Badge](https://img.shields.io/badge/Code_Version-1.8-yellow)](https://github.com/KRWCLASSIC/YellowToolbox)
+[![Static Badge](https://img.shields.io/badge/Code_Version-pre--1.9-yellow)](https://github.com/KRWCLASSIC/YellowToolbox)
 [![Static Badge](https://img.shields.io/badge/Maintainer-KRWCLASSIC-green)](https://github.com/KRWCLASSIC)
 
 [![Static Badge](https://img.shields.io/badge/Current_State-Alpha-red)](where_u_goin_dawg)
@@ -30,8 +30,8 @@ This bot is designed to enhance your Discord server experience with a variety of
 - GIF Creation: Convert attached images or videos to GIFs. (Command & "📷" message or reaction)
 - Ban/Unban Users: Admin can ban or unban from using most of the bot's features.
 - Nickname Tracking: Track and enforce nickname changes for specific user.
-- Invite Links: Generate one-time use invite links. (Temporary)
-- Autoupdate: Ability to update itself (1.3+)
+- Triple Message: Bloody Marry like feature. (full customizable)
+- Autoupdate: Ability to update itself.
 
 ## Setup Instructions
 

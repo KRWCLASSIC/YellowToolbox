@@ -8,6 +8,17 @@ Plans:
 - Create KRW's Bot Template or smth | YellowTemplate 😈 (2.X)
 - YellowBoombox (After major changes in 2.X of YellowToolbox)
 
+1.9
+- Silented down all of the ffmpeg output
+- Added restart command (admin only)
+- Removed out invite command
+- Added triple message feature (bloody marry ahh thing)
+- Renamed media variables
+- Unhardcoded nicktrack channel id (i forgot :c)
+- Fixed some encoding errors with logging
+- Makeover for config file
+-
+
 1.8
 - Switched over to TOML
 - Moved config file to "files" folder

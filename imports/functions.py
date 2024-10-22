@@ -8,6 +8,7 @@ import asyncio
 import random
 import shutil
 import json
+import sys
 import os
 import re
 
@@ -18,13 +19,13 @@ from imports.global_setup import bot, config
 # Some variables
 max_file_size = int(config['gifs']['max_file_size']) * 1024 * 1024
 telemetry_file_path = config['telemetry']['file_path']
+wrong_attachment = config['media']['wrong_attachment']
 quote_channel_id = int(config['quotes']['channel_id'])
 embed_color = int(config['quotes']['embed_color'], 16)
 telemetry_enabled = config['telemetry']['enabled']
 gif_creation_enabled = config['gifs']['enabled']
 quotes_enabled = config['quotes']['enabled']
 admin_ids = config['settings']['admin_ids']
-wrong_mp3 = config['media']['wrong_mp3']
 ban_list = config['files']['ban_list']
 
 # Async Functions
@@ -154,6 +155,31 @@ async def handle_everyone_command(message):
     await message.delete()
     await message.channel.send("@everyone")
 
+async def handle_restart_command(message):
+    if message.guild is None:
+        await message.reply("This command can only be used in a server.")
+        return
+
+    if message.author.id not in admin_ids:
+        await message.reply("You do not have permission to use this command.")
+        print_and_log(f'Banned {message.author.id} due to attempted use of admin command!')
+        BLOCKED_USER_IDS = get_blocked_user_ids()
+        if message.author.id not in BLOCKED_USER_IDS:
+            BLOCKED_USER_IDS.append(message.author.id)
+            with open(ban_list, 'w') as file:
+                file.write(','.join(map(str, BLOCKED_USER_IDS)))
+        return
+
+    try:
+        await message.reply("Restarting the bot...")
+        print_and_log("Bot is restarting...")
+
+        # Restart the bot
+        os.execv(sys.executable, ['python'] + sys.argv)
+    except Exception as e:
+        await message.reply(f"An error occurred while restarting the bot: {e}")
+        print(f"Error during bot restart: {e}")
+
 async def handle_wrong_command(message):
     if message.guild is None:
         await message.reply("This command can only be used in a server.")
@@ -166,7 +192,7 @@ async def handle_wrong_command(message):
     print_and_log(f"Someone was told wrong | Server: {guild_name} | Channel: {channel_name} | User: {username}")
     
     await message.delete()
-    await message.channel.send(file=discord.File(wrong_mp3), reference=message.reference)
+    await message.channel.send(file=discord.File(wrong_attachment), reference=message.reference)
 
 async def handle_ban_command(message):
     if message.guild is None:
@@ -226,39 +252,6 @@ async def handle_unban_command(message):
     except (ValueError, IndexError, AttributeError):
         await message.reply("Invalid unban command format. Use unban(user_id).")
 
-async def handle_invite_command(message):
-    if message.guild is None:
-        await message.reply("This command can only be used in a server.")
-        return
- 
-    if message.author.id not in admin_ids:
-        await message.reply("You do not have permission to use this command.")
-        print_and_log(f'Banned {message.author.id} due to attempted use of admin command!')
-        BLOCKED_USER_IDS = get_blocked_user_ids()
-        if message.author.id not in BLOCKED_USER_IDS:
-            BLOCKED_USER_IDS.append(message.author.id)
-            with open(ban_list, 'w') as file:
-                file.write(','.join(map(str, BLOCKED_USER_IDS)))
-        return
-    
-    guild_name = message.guild.name if message.guild and message.guild.name else "None"
-    channel_name = "Direct Message" if isinstance(message.channel, discord.DMChannel) else (message.channel.name if message.channel and message.channel.name else "None")
-    username = message.author.name if message.author and message.author.name else "None"
-    
-    print_and_log(f"Invite was created | Server: {guild_name} | Channel: {channel_name} | User: {username}")
-
-    try:
-        # Create a one-time 24-hour invite link
-        invite = await message.channel.create_invite(max_uses=1, max_age=86400)
-        
-        # DM the invite to the user who sent the command
-        dm_channel = await message.author.create_dm()
-        await dm_channel.send(f"Here is your invite link: {invite.url}")
-
-        await message.reply(f"Invite link has been sent to your DM!")
-    except Exception as e:
-        await message.reply(f"An error occurred while creating the invite: {e}")
-
 async def send_help(message):
     embed = discord.Embed(title="Bot Help", description="Here are the commands you can use:", color=0x00ff00)
     embed.add_field(name="@Bot gif", value="Converts attached images or videos to GIFs.", inline=False)
@@ -267,7 +260,7 @@ async def send_help(message):
     embed.add_field(name="@Bot help", value="Shows this help message.", inline=False)
     embed.add_field(name="@Bot rr", value="Plays russian roulette.", inline=False)
     embed.add_field(name="@Bot quote", value="Quotes replied message in the channel.", inline=False)
-    embed.add_field(name="@Bot invite", value="Creates for you temporary server invite. [ADMIN ONLY]", inline=False)
+    embed.add_field(name="@Bot restart", value="Restarts the bot. [ADMIN ONLY]", inline=False)
     embed.add_field(name="@Bot readlog(number)", value="Shows you last (number) lines of log. [ADMIN ONLY]", inline=False)
     embed.add_field(name="@Bot chatlog(userid/all)", value="Sends you entire DM history with provided user. [ADMIN ONLY]", inline=False)
     embed.add_field(name="@Bot ban/unban(userid)", value="Bans user from using most of the bot features. [ADMIN ONLY]", inline=False)
@@ -518,14 +511,14 @@ def check_files(config, base_path=''):
     scan_config(config)
 
     if missing_files:
-        print("Missing files:")
+        print("\nMissing files:")
 
         for file in missing_files:
             print(f"  {file}")
 
         exit()
     else:
-        print("All required files are present.")
+        print("\nAll required files are present.")
 
 def get_blocked_user_ids():
     try:
@@ -556,7 +549,7 @@ def create_gif_from_image(input_path, output_path):
             '-vf', 'scale=640:-1',
             output_path,
             '-y'  # Overwrite output file if it exists
-        ], check=True)
+        ], check=True, stdout=subprocess.DEVNULL)
     except subprocess.CalledProcessError as e:
         print(f"FFmpeg error while processing image: {e}")
         raise
@@ -570,7 +563,7 @@ def create_gif_from_video(input_path, output_path):
             '-vf', 'fps=10,scale=640:-1',
             output_path,
             '-y'  # Overwrite output file if it exists
-        ], check=True)
+        ], check=True, stdout=subprocess.DEVNULL)
     except subprocess.CalledProcessError as e:
         print(f"FFmpeg error while processing video: {e}")
         raise
@@ -585,7 +578,7 @@ def compress_gif(gif_path):
             '-vf', 'fps=10,palettegen=dither=bayer',
             palette_path,
             '-y'  # Overwrite output file if it exists
-        ], check=True)
+        ], check=True, stdout=subprocess.DEVNULL)
 
         # Create the compressed GIF using the generated palette
         compressed_path = gif_path.rsplit('.', 1)[0] + "_compressed.gif"
@@ -596,7 +589,7 @@ def compress_gif(gif_path):
             '-vf', 'fps=10,paletteuse=dither=floyd_steinberg',
             compressed_path,
             '-y'  # Overwrite output file if it exists
-        ], check=True)
+        ], check=True, stdout=subprocess.DEVNULL)
         
         return compressed_path
     except subprocess.CalledProcessError as e:
@@ -606,22 +599,21 @@ def remove_query_params(url):
     parsed_url = urlparse(url)
     clean_url = urlunparse(parsed_url._replace(query=""))
     return clean_url
-
 def log_telemetry(message):
     if telemetry_enabled:
         timestamp = datetime.now().isoformat()
         log_entry = {timestamp: message}
         
         if os.path.exists(telemetry_file_path):
-            with open(telemetry_file_path, 'r') as file:
+            with open(telemetry_file_path, 'r', encoding='utf-8') as file:
                 telemetry_data = json.load(file)
         else:
             telemetry_data = {"telemetry": {}}
         
         telemetry_data["telemetry"].update(log_entry)
         
-        with open(telemetry_file_path, 'w') as file:
-            json.dump(telemetry_data, file, indent=4)
+        with open(telemetry_file_path, 'w', encoding='utf-8') as file:
+            json.dump(telemetry_data, file, indent=4, ensure_ascii=False)
 
 def print_and_log(message):
     print(message)
