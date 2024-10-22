@@ -211,15 +211,16 @@ async def handle_ban_command(message):
 
     try:
         user_id = int(re.search(r'ban\((\d+)\)', message.content).group(1))
+        user = bot.get_user(user_id)  # Fetch the user object
         blocked_user_ids = get_blocked_user_ids()
         if user_id not in blocked_user_ids:
             blocked_user_ids.append(user_id)
             with open(ban_list, 'w') as file:
                 file.write(','.join(map(str, blocked_user_ids)))
-            await message.reply(f"User {user_id} has been banned.")
+            await message.reply(f"User {user.name} has been banned.")  # Use username here
             await message.delete()
         else:
-            await message.reply(f"User {user_id} is already banned.")
+            await message.reply(f"User {user.name} is already banned.")  # Use username here
     except (ValueError, IndexError, AttributeError):
         await message.reply("Invalid ban command format. Use ban(user_id).")
 
@@ -240,15 +241,16 @@ async def handle_unban_command(message):
 
     try:
         user_id = int(re.search(r'unban\((\d+)\)', message.content).group(1))
+        user = bot.get_user(user_id)  # Fetch the user object
         blocked_user_ids = get_blocked_user_ids()
         if user_id in blocked_user_ids:
             blocked_user_ids.remove(user_id)
             with open(ban_list, 'w') as file:
                 file.write(','.join(map(str, blocked_user_ids)))
-            await message.reply(f"User {user_id} has been unbanned.")
+            await message.reply(f"User {user.name} has been unbanned.")  # Use username here
             await message.delete()
         else:
-            await message.reply(f"User {user_id} is not banned.")
+            await message.reply(f"User {user.name} is not banned.")  # Use username here
     except (ValueError, IndexError, AttributeError):
         await message.reply("Invalid unban command format. Use unban(user_id).")
 

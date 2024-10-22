@@ -17,7 +17,7 @@ Plans:
 - Unhardcoded nicktrack channel id (i forgot :c)
 - Fixed some encoding errors with logging
 - Makeover for config file
--
+- Improved ban/unban notices
 
 1.8
 - Switched over to TOML
