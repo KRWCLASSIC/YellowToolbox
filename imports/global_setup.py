@@ -7,7 +7,7 @@ import toml
 from imports.update import *
 
 # Version Variable
-ver = 'pre-1.9'
+ver = '1.9'
 
 # Enable some permissions
 intents = discord.Intents.default()
@@ -31,3 +31,4 @@ if update_input == '':
     update_input = input("Do you want to check for updates? [Y/n]: ").lower()
 if update_input in ['y', 'yes']:
     update()
+    updated = True

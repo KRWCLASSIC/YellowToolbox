@@ -484,6 +484,14 @@ async def handle_quote_command(message):
     await message.delete()
 
 # Functions
+def restart():
+    try:
+        print("Bot is restarting...")
+        os.execv(sys.executable, ['python'] + sys.argv)
+        
+    except Exception as e:
+        print(f"Error during bot restart: {e}")
+
 def count_camera_reactions(message):
     for reaction in message.reactions:
         if str(reaction.emoji) == '📷':

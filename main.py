@@ -12,6 +12,10 @@ remove_pycache()
 # Check if all importnant files exist
 check_files(config)
 
+# Check if updated is defined and true
+if 'updated' in locals() and updated:
+    restart()
+
 # Load token from file
 with open(config['token']['token'], 'r') as file:
     TOKEN = file.read().strip()

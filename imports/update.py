@@ -74,5 +74,5 @@ def update():
 
     shutil.rmtree("latest_version")
     os.remove("latest.zip")
-    
-    print("Update completed. Restart the script to apply changes.")
+
+    print("Update completed.")
