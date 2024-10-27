@@ -451,7 +451,7 @@ async def handle_chatlog_command(message, user_id_or_all: str):
 
 async def handle_quote_command(message):
     # Check if quoting is enabled
-    if quotes_enabled:
+    if not quotes_enabled:
         await message.reply("Quoting is currently disabled.")
         return
 
