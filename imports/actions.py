@@ -25,6 +25,7 @@ consecutive_messages = {}
 camera_clicks = {}
 
 async def on_ready():
+    await bot.tree.sync()
 
     print('')
     print('   ^^^:  .^^^          :55Y .555.                         ^^^^^^^^^^                      ?55! 7557                               ')

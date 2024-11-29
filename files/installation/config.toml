@@ -1,10 +1,9 @@
 # These settings are made for my Discord server, feel free to change them! (especially id's!)
 # This isn't supposed to be a robust bot with billions of features! For that, you can use YAGPDB...
 
-# There are 3 valid states for autoupdate: "y" - Autoupdate, "n" - No autoupdates, and "" - Prompt for update on startup.
 [settings]
 admin_ids = [495999626143465472]
-autoupdate = "n"
+autoupdate = "n" # There are 3 valid states: "y" - Autoupdate, "n" - No autoupdates, and "" - Prompt for update on startup.
 
 # Some (one) files used generally by bot
 [files]
@@ -27,6 +26,11 @@ reaction_enabled = true
 message_enabled = true
 max_file_size = 9
 enabled = true
+
+# Russian Roulette settings
+[r_roulette]
+wait_time = 2 # Wait time between command and results (in seconds)
+odds = 6 # Odds from 1 to set number
 
 # Feature that tracks username changes
 [nicktrack]

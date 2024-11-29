@@ -22,10 +22,12 @@ telemetry_file_path = config['telemetry']['file_path']
 wrong_attachment = config['media']['wrong_attachment']
 quote_channel_id = int(config['quotes']['channel_id'])
 embed_color = int(config['quotes']['embed_color'], 16)
+rr_waittime = int(config['r_roulette']['wait_time'])
 telemetry_enabled = config['telemetry']['enabled']
 gif_creation_enabled = config['gifs']['enabled']
 quotes_enabled = config['quotes']['enabled']
 admin_ids = config['settings']['admin_ids']
+rr_odds = int(config['r_roulette']['odds'])
 ban_list = config['files']['ban_list']
 
 # Async Functions
@@ -273,17 +275,17 @@ async def handle_russian_roulette_command(message):
         await message.reply("This command can only be used in a server.")
         return
 
-    random_number = random.randint(1, 8)
+    random_number = random.randint(1, rr_odds)
 
     # Announce Russian Roulette action
     await message.reply(f"🔫 Russian Roulette: Rolling the chamber...")
 
     # Add a delay before revealing the result
-    await asyncio.sleep(2)  # Wait for 2 seconds
+    await asyncio.sleep(rr_waittime)  # Wait for 2 seconds 
 
-    if random_number == 5:
+    if random_number == 1:
         member = message.author
-
+        
         # Check if the bot's role is higher than the user's role
         if message.guild.me.top_role <= member.top_role:
             await message.reply(f"Cannot kick {member.name} due to role hierarchy. My role must be higher than theirs.")
@@ -328,7 +330,12 @@ async def handle_russian_roulette_command(message):
     channel_name = "Direct Message" if isinstance(message.channel, discord.DMChannel) else (message.channel.name if message.channel and message.channel.name else "None")
     username = message.author.name if message.author and message.author.name else "None"
     
-    print_and_log(f"Someone played russian roulette | Server: {guild_name} | Channel: {channel_name} | User: {username}")
+    if random_number == 1:
+        survived = False
+    else:
+        survived = True
+
+    print_and_log(f"Someone played russian roulette | Server: {guild_name} | Channel: {channel_name} | User: {username} | Survived: {survived}")
 
 async def handle_readlog_command(message, number: int):
     if message.author.id not in admin_ids:

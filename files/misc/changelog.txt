@@ -4,9 +4,13 @@ Plans:
 - Per-Command exclude list (2.0)
 - Better permission system (2.0)
 - Move over to cogs (2.1/Never)
-- Move over to slashcommands (2.0)
 - Create KRW's Bot Template or smth | YellowTemplate 😈 (2.X)
 - YellowBoombox (After major changes in 2.X of YellowToolbox)
+
+2.0
+- Now russian roulette is actually accurate (1/6 chances) (will add option to modify the odds in settings)
+- Russian roulette now saves results of the game in log
+- Not switching to slashcommands never again (it took me like a month and still reverted the changes)
 
 1.9
 - Silented down all of the ffmpeg output

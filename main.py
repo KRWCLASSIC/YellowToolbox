@@ -9,7 +9,7 @@ from imports.update import *
 # Remove pycache folders
 remove_pycache()
 
-# Check if all importnant files exist
+# Check if all important files exist
 check_files(config)
 
 # Check if updated is defined and true

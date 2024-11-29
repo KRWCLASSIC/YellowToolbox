@@ -1,7 +1,7 @@
-# Yellow Toolbox `1.9`
+# Yellow Toolbox `pre-2.0`
 
 [![Static Badge](https://img.shields.io/badge/Stable_Version-1.9-yellow)](https://github.com/KRWCLASSIC/YellowToolbox/tree/5e21ad094f5a0c32f73e0afdb2d355f5a18386cc)
-[![Static Badge](https://img.shields.io/badge/Code_Version-1.9-yellow)](https://github.com/KRWCLASSIC/YellowToolbox)
+[![Static Badge](https://img.shields.io/badge/Code_Version-pre--2.0-yellow)](https://github.com/KRWCLASSIC/YellowToolbox)
 [![Static Badge](https://img.shields.io/badge/Maintainer-KRWCLASSIC-green)](https://github.com/KRWCLASSIC)
 
 [![Static Badge](https://img.shields.io/badge/Current_State-Alpha-red)](where_u_goin_dawg)
@@ -50,7 +50,7 @@ Also you need FFmpeg to be installed on the machine!
 
 ## Commands
 
-Just ping the bot for the ones that are acutally safe to use.
+Just ping the bot for the ones that are actually safe to use.
 
 ## Contributing
 

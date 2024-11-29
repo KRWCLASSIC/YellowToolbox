@@ -7,7 +7,7 @@ import toml
 from imports.update import *
 
 # Version Variable
-ver = '1.9'
+ver = 'pre-2.0'
 
 # Enable some permissions
 intents = discord.Intents.default()
@@ -18,7 +18,7 @@ intents.members = True
 intents.guilds = True
 
 # Register the bot variable
-bot = commands.Bot(command_prefix="", intents=intents)
+bot = commands.Bot(command_prefix="", intents=intents, sync_commands=True)
 
 # Load the config file
 config = toml.load('files/installation/config.toml')
