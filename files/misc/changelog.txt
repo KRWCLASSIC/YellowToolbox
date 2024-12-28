@@ -1,16 +1,25 @@
 Plans:
-- Settings/Config command (Export, Import and Free Edit) (2.0) 
-- Improve ban command (Time bans etc.) (2.0)
-- Per-Command exclude list (2.0)
-- Better permission system (2.0)
-- Move over to cogs (2.1/Never)
-- Create KRW's Bot Template or smth | YellowTemplate 😈 (2.X)
-- YellowBoombox (After major changes in 2.X of YellowToolbox)
+- Settings/Config command (Export, Import and Free Edit) (2.1) 
+- Improve ban command (Time bans etc.) (2.1)
+- Per-Command exclude list (2.1)
+- Better permission system (2.1)
+- Modifiable frame limit for video gifs (2.1)
 
 2.0
 - Now russian roulette is actually accurate (1/6 chances) (will add option to modify the odds in settings)
 - Russian roulette now saves results of the game in log
 - Not switching to slashcommands never again (it took me like a month and still reverted the changes)
+- Removed setup.py, it was shit - gonna remake
+- Fully fixed ffmpeg jankyness with colors (pics and vids)
+- Moved most 2.0 stuff to 2.1 or nothing
+- Created YellowTemplate and YellowBoombox (available on my github)
+- Renamed and revamped gif creating function(s) (and removed copy made for reactions feature)
+- Verbose logging now as a option for gif creation (config)
+- Modifiable max file size for videos (gifs, config)
+- Temp with better cleanup logic
+- Fixed code spacing lol
+- Updated .gitignore with my new found knowledge
+# This update was finished on 28/12/2024 03:00AM but my lazy ass needs to manage time better so ill push it later
 
 1.9
 - Silented down all of the ffmpeg output

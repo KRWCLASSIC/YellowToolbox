@@ -22,6 +22,8 @@ telemetry_file_path = config['telemetry']['file_path']
 wrong_attachment = config['media']['wrong_attachment']
 quote_channel_id = int(config['quotes']['channel_id'])
 embed_color = int(config['quotes']['embed_color'], 16)
+max_vid_length = int(config['gifs']['max_vid_length'])
+verbose_creation = config['gifs']['verbose_creation']
 rr_waittime = int(config['r_roulette']['wait_time'])
 telemetry_enabled = config['telemetry']['enabled']
 gif_creation_enabled = config['gifs']['enabled']
@@ -31,111 +33,65 @@ rr_odds = int(config['r_roulette']['odds'])
 ban_list = config['files']['ban_list']
 
 # Async Functions
-async def handle_gif_creation(message, credited_users):
+async def handle_gifs(message, credited_users=None):
+    """Handles the GIF creation process triggered by a Discord command."""
+    if credited_users is None:
+        credited_users = []  # Initialize if not provided
+
     if gif_creation_enabled and message.attachments:
         for attachment in message.attachments:
-            file_path = f"./{attachment.filename}"
-            gif_path = file_path.rsplit('.', 1)[0] + ".gif"
-            
+            temp_file_path = os.path.join('temp', attachment.filename)
+            gif_path = os.path.join('temp', attachment.filename.rsplit('.', 1)[0] + ".gif")
+
             try:
+                # Check if the file size exceeds the limit
                 if attachment.size > max_file_size:
                     await message.reply(f"File is too large. Please attach a file smaller than {max_file_size}MB.")
                     continue
 
-                # Save the attached file locally
-                await attachment.save(file_path)
+                # Save the attachment in the temp folder
+                os.makedirs('temp', exist_ok=True)
+                await attachment.save(temp_file_path)
 
-                # Handle image and video files separately
+                # Process the file based on its type (image or video)
                 if attachment.filename.lower().endswith(('png', 'jpg', 'jpeg')):
-                    create_gif_from_image(file_path, gif_path)
+                    create_gif_from_image(temp_file_path, gif_path)
                 elif attachment.filename.lower().endswith(('mp4', 'mov', 'avi')):
-                    # Check video duration
-                    if not is_video_duration_valid(file_path, max_duration=10):
-                        await message.reply("Video is too long. Please attach a video shorter than 10 seconds.")
-                        os.remove(file_path)
+                    # Validate the video duration
+                    if not is_video_duration_valid(temp_file_path, max_duration=max_vid_length):
+                        await message.reply(f"Video is too long. Please attach a video shorter than {max_vid_length} seconds.")
                         continue
-                    create_gif_from_video(file_path, gif_path)
+                    create_gif_from_video(temp_file_path, gif_path)
                 else:
                     await message.reply("Unsupported file type. Please attach an image or video.")
                     continue
 
-                # Check if the GIF exceeds the size limit, and compress if necessary
+                # Compress the GIF if its size exceeds the limit
                 if os.path.exists(gif_path) and os.path.getsize(gif_path) > max_file_size:
                     gif_path = compress_gif(gif_path)
 
-                # Send the created GIF in the channel
+                # Send the created GIF
                 message_sent = await message.channel.send(file=discord.File(gif_path))
                 gif_link = message_sent.attachments[0].url
                 clean_link = remove_query_params(gif_link)
 
-                guild_name = message.guild.name
-                channel_name = message.channel.name
-                usernames = ", ".join(user.name for user in credited_users if user != bot.user)
-
-                log_gif_creation(attachment.filename, clean_link, guild_name, channel_name, usernames)
-
-            except Exception as e:
-                await message.reply("There was an error processing the file.")
-                print(f"Error processing file: {e}")
-            finally:
-                # Ensure both the input and output files are deleted
-                if os.path.exists(file_path):
-                    os.remove(file_path)
-                if os.path.exists(gif_path):
-                    os.remove(gif_path)
-
-async def handle_gif_command(message):
-    if gif_creation_enabled and message.attachments:
-        for attachment in message.attachments:
-            file_path = f"./{attachment.filename}"
-            gif_path = file_path.rsplit('.', 1)[0] + ".gif"
-
-            try:
-                if attachment.size > max_file_size:
-                    await message.reply(f"File is too large. Please attach a file smaller than {max_file_size}MB.")
-                    continue
-
-                # Save the attached file locally
-                await attachment.save(file_path)
-
-                # Handle image and video files separately
-                if attachment.filename.lower().endswith(('png', 'jpg', 'jpeg')):
-                    create_gif_from_image(file_path, gif_path)
-                elif attachment.filename.lower().endswith(('mp4', 'mov', 'avi')):
-                    # Check video duration
-                    if not is_video_duration_valid(file_path, max_duration=10):
-                        await message.reply("Video is too long. Please attach a video shorter than 10 seconds.")
-                        os.remove(file_path)
-                        continue
-                    create_gif_from_video(file_path, gif_path)
-                else:
-                    await message.reply("Unsupported file type. Please attach an image or video.")
-                    continue
-                
-                # Check if the GIF exceeds the size limit, and compress if necessary
-                if os.path.exists(gif_path) and os.path.getsize(gif_path) > max_file_size:
-                    gif_path = compress_gif(gif_path)
-
-                # Send the created GIF in the channel
-                message_sent = await message.channel.send(file=discord.File(gif_path))
-                gif_link = message_sent.attachments[0].url
-                clean_link = remove_query_params(gif_link)
-                
-                guild_name = message.guild.name if message.guild and message.guild.name else "None"
-                channel_name = "Direct Message" if isinstance(message.channel, discord.DMChannel) else (message.channel.name if message.channel and message.channel.name else "None")
-                username = message.author.name if message.author and message.author.name else "None"
-
-                print_and_log(f"GIF Created: {attachment.filename} | Link: {clean_link} | Server: {guild_name} | Channel: {channel_name} | User: {username}")
+                # Log details about the created GIF
+                guild_name = message.guild.name if message.guild else "None"
+                channel_name = (
+                    "Direct Message" if isinstance(message.channel, discord.DMChannel)
+                    else (message.channel.name if message.channel else "None")
+                )
+                username = message.author.name if message.author else "None"
+                credited_usernames = ", ".join(user.name for user in credited_users if user != bot.user)
+                print_and_log(f"GIF Created: {attachment.filename} | Link: {clean_link} | Server: {guild_name} | Channel: {channel_name} | User: {username} | Credited Users: {credited_usernames}")
 
             except Exception as e:
                 await message.reply("There was an error processing the file.")
                 print(f"Error processing file: {e}")
+
             finally:
-                # Ensure both the input and output files are deleted
-                if os.path.exists(file_path):
-                    os.remove(file_path)
-                if os.path.exists(gif_path):
-                    os.remove(gif_path)
+                # Clear the temp directory to ensure no leftover files
+                clear_temp_directory()
 
     # Optionally delete the original message after processing
     try:
@@ -554,68 +510,137 @@ def is_video_duration_valid(file_path, max_duration=10):
     except Exception as e:
         print(f"Error checking video duration: {e}")
         return False
-    
-def create_gif_from_image(input_path, output_path):
-    try:
-        # Convert image to GIF without heavy compression
-        subprocess.run([
-            'ffmpeg',
-            '-i', input_path,
-            '-loop', '1',
-            '-t', '10',
-            '-vf', 'scale=640:-1',
-            output_path,
-            '-y'  # Overwrite output file if it exists
-        ], check=True, stdout=subprocess.DEVNULL)
-    except subprocess.CalledProcessError as e:
-        print(f"FFmpeg error while processing image: {e}")
-        raise
 
-def create_gif_from_video(input_path, output_path):
+def create_gif_from_image(input_path, output_path):
+    """Creates a GIF from an image using FFmpeg."""
+    palette_path = os.path.join(output_path.rsplit('.', 1)[0] + "_palette.png")
     try:
-        # Convert video to GIF without heavy compression
-        subprocess.run([
+        os.makedirs('temp', exist_ok=True)
+
+        palettegen_command = [
             'ffmpeg',
             '-i', input_path,
-            '-vf', 'fps=10,scale=640:-1',
+            '-vf', 'palettegen',
+            palette_path,
+            '-y'
+        ]
+        if not verbose_creation:
+            palettegen_command.insert(1, '-loglevel')
+            palettegen_command.insert(2, 'quiet')
+
+        subprocess.run(palettegen_command, check=True)
+
+        gif_creation_command = [
+            'ffmpeg',
+            '-i', input_path,
+            '-i', palette_path,
+            '-lavfi', 'paletteuse',
             output_path,
-            '-y'  # Overwrite output file if it exists
-        ], check=True, stdout=subprocess.DEVNULL)
+            '-y'
+        ]
+        if not verbose_creation:
+            gif_creation_command.insert(1, '-loglevel')
+            gif_creation_command.insert(2, 'quiet')
+
+        subprocess.run(gif_creation_command, check=True)
+
     except subprocess.CalledProcessError as e:
-        print(f"FFmpeg error while processing video: {e}")
+        print(f"Error creating GIF from image: {e}")
+        raise
+    finally:
+        if os.path.exists(palette_path):
+            os.remove(palette_path)
+
+def create_gif_from_video(video_path, output_gif_path):
+    """Converts a video to a GIF using FFmpeg."""
+    try:
+        palette_path = os.path.join('temp', os.path.splitext(os.path.basename(video_path))[0] + '_palette.png')
+
+        palettegen_command = [
+            "ffmpeg",
+            "-i", video_path,
+            "-vf", "fps=10,palettegen",
+            palette_path,
+            "-y"
+        ]
+        if not verbose_creation:
+            palettegen_command.insert(1, '-loglevel')
+            palettegen_command.insert(2, 'quiet')
+
+        subprocess.run(palettegen_command, check=True)
+
+        gif_command = [
+            "ffmpeg",
+            "-i", video_path,
+            "-i", palette_path,
+            "-lavfi", "fps=10,paletteuse",
+            output_gif_path,
+            "-y"
+        ]
+        if not verbose_creation:
+            gif_command.insert(1, '-loglevel')
+            gif_command.insert(2, 'quiet')
+
+        subprocess.run(gif_command, check=True)
+
+    except subprocess.CalledProcessError as e:
+        print(f"Error creating GIF from video: {e}")
         raise
 
 def compress_gif(gif_path):
+    """Compresses a GIF to reduce its size using FFmpeg."""
+    compressed_path = os.path.join(gif_path.rsplit('.', 1)[0] + "_compressed.gif")
+    palette_path = os.path.join(gif_path.rsplit('.', 1)[0] + "_comppalette.png")
     try:
-        # Generate a palette for the GIF
-        palette_path = gif_path.rsplit('.', 1)[0] + "_palette.png"
-        subprocess.run([
+        palettegen_command = [
             'ffmpeg',
             '-i', gif_path,
-            '-vf', 'fps=10,palettegen=dither=bayer',
+            '-vf', 'fps=10,palettegen',
             palette_path,
-            '-y'  # Overwrite output file if it exists
-        ], check=True, stdout=subprocess.DEVNULL)
+            '-y'
+        ]
+        if not verbose_creation:
+            palettegen_command.insert(1, '-loglevel')
+            palettegen_command.insert(2, 'quiet')
 
-        # Create the compressed GIF using the generated palette
-        compressed_path = gif_path.rsplit('.', 1)[0] + "_compressed.gif"
-        subprocess.run([
+        subprocess.run(palettegen_command, check=True)
+
+        gif_compress_command = [
             'ffmpeg',
             '-i', gif_path,
             '-i', palette_path,
-            '-vf', 'fps=10,paletteuse=dither=floyd_steinberg',
+            '-filter_complex', 'fps=10 [fg]; [fg][1:v] paletteuse',
             compressed_path,
-            '-y'  # Overwrite output file if it exists
-        ], check=True, stdout=subprocess.DEVNULL)
-        
+            '-y'
+        ]
+        if not verbose_creation:
+            gif_compress_command.insert(1, '-loglevel')
+            gif_compress_command.insert(2, 'quiet')
+
+        subprocess.run(gif_compress_command, check=True)
+
         return compressed_path
     except subprocess.CalledProcessError as e:
-        print(f"FFmpeg error during compression: {e}")
+        print(f"Error compressing GIF: {e}")
         raise
+    finally:
+        if os.path.exists(palette_path):
+            os.remove(palette_path)
+
+def clear_temp_directory():
+    """Clears all files from the temp directory."""
+    temp_folder = 'temp'
+    if os.path.exists(temp_folder):
+        for file in os.listdir(temp_folder):
+            file_path = os.path.join(temp_folder, file)
+            if os.path.isfile(file_path):
+                os.remove(file_path)
+
 def remove_query_params(url):
     parsed_url = urlparse(url)
     clean_url = urlunparse(parsed_url._replace(query=""))
     return clean_url
+
 def log_telemetry(message):
     if telemetry_enabled:
         timestamp = datetime.now().isoformat()

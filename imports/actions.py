@@ -68,7 +68,7 @@ async def on_reaction_add(reaction, user):
             async for user in reaction.users():
                 await message.remove_reaction('📷', user)
 
-            await handle_gif_creation(message, camera_clicks[reaction.message.id])
+            await handle_gifs(message, camera_clicks[reaction.message.id])
 
 async def on_member_update(before: discord.Member, after: discord.Member):
     if not nicktrack_enabled:
@@ -137,7 +137,7 @@ async def on_message(message):
         if message.content.strip() == '📷' and message.reference and message.reference.resolved:
             original_message = message.reference.resolved
             if original_message.attachments:
-                await handle_gif_creation(original_message, [message.author])
+                await handle_gifs(original_message, [message.author])
 
     if triple_enabled:
         global consecutive_messages
@@ -168,7 +168,7 @@ async def on_message(message):
     if bot.user in message.mentions and message.author != bot.user:
         content = message.content.lower()
         if re.search(r'\bgif\b', content):
-            await handle_gif_command(message)
+            await handle_gifs(message)
         elif re.search(r'\beveryone\b', content):
             await handle_everyone_command(message)
         elif re.search(r'\bwrong\b', content):

@@ -22,8 +22,10 @@ enabled = true
 
 # General gif settings
 [gifs]
+verbose_creation = false
 reaction_enabled = true
 message_enabled = true
+max_vid_length = 15
 max_file_size = 9
 enabled = true
 
