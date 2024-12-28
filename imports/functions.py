@@ -94,7 +94,7 @@ async def handle_gifs(message, credited_users=None):
                 clear_temp_directory()
 
     # Optionally delete the original message after processing
-    if credited_users is None:
+    if not credited_users:
         try:
             await message.delete()
         except:
