@@ -5,6 +5,9 @@ Plans:
 - Better permission system (2.1)
 - Modifiable frame limit for video gifs (2.1)
 
+2.1
+- Fixed message being removed with reaction gif feature
+
 2.0
 - Now russian roulette is actually accurate (1/6 chances) (will add option to modify the odds in settings)
 - Russian roulette now saves results of the game in log
