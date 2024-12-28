@@ -22,7 +22,7 @@ Plans:
 # This update was finished on 28/12/2024 03:00AM but my lazy ass needs to manage time better so ill push it later
 
 1.9
-- Silented down all of the ffmpeg output
+- Silented down all of the ffmpeg output (not really)
 - Added restart command (admin only)
 - Removed out invite command
 - Added triple message feature (bloody marry ahh thing)

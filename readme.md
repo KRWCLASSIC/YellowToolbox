@@ -1,7 +1,7 @@
-# Yellow Toolbox `2.0`
+# Yellow Toolbox `pre-2.1`
 
 [![Static Badge](https://img.shields.io/badge/Stable_Version-2.0-yellow)](https://github.com/KRWCLASSIC/YellowToolbox/tree/6ac8b708e3a09086ee824d0c0369472fb1fc52dd)
-[![Static Badge](https://img.shields.io/badge/Code_Version-2.0-yellow)](https://github.com/KRWCLASSIC/YellowToolbox)
+[![Static Badge](https://img.shields.io/badge/Code_Version--pre-2.1-yellow)](https://github.com/KRWCLASSIC/YellowToolbox)
 [![Static Badge](https://img.shields.io/badge/Maintainer-KRWCLASSIC-green)](https://github.com/KRWCLASSIC)
 
 [![Static Badge](https://img.shields.io/badge/Current_State-Alpha-red)](where_u_goin_dawg)

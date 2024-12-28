@@ -94,10 +94,11 @@ async def handle_gifs(message, credited_users=None):
                 clear_temp_directory()
 
     # Optionally delete the original message after processing
-    try:
-        await message.delete()
-    except:
-        return
+    if credited_users is None:
+        try:
+            await message.delete()
+        except:
+            return
     
 async def handle_everyone_command(message):
     if message.guild is None:

@@ -7,7 +7,7 @@ import toml
 from imports.update import *
 
 # Version Variable
-ver = '2.0'
+ver = 'pre-2.1'
 
 # Enable some permissions
 intents = discord.Intents.default()
