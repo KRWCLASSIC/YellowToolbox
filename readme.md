@@ -1,6 +1,6 @@
 # Yellow Toolbox `2.0`
 
-[![Static Badge](https://img.shields.io/badge/Stable_Version-2.0-yellow)](where_u_goin_dawg)
+[![Static Badge](https://img.shields.io/badge/Stable_Version-2.0-yellow)](https://github.com/KRWCLASSIC/YellowToolbox/tree/6ac8b708e3a09086ee824d0c0369472fb1fc52dd)
 [![Static Badge](https://img.shields.io/badge/Code_Version-2.0-yellow)](https://github.com/KRWCLASSIC/YellowToolbox)
 [![Static Badge](https://img.shields.io/badge/Maintainer-KRWCLASSIC-green)](https://github.com/KRWCLASSIC)
 
@@ -13,7 +13,8 @@ This bot is designed to enhance your Discord server experience with a variety of
 <sub>"Code" Versions contain all the hotpatches and newest features, that might contain bugs!</sub>
 <details>
 <summary>Stable Versions:</summary>
-<a href="https://github.com/KRWCLASSIC/YellowToolbox/tree/5e21ad094f5a0c32f73e0afdb2d355f5a18386cc">Latest - 1.9</a><br>
+<a href="https://github.com/KRWCLASSIC/YellowToolbox/tree/https://github.com/KRWCLASSIC/YellowToolbox/tree/6ac8b708e3a09086ee824d0c0369472fb1fc52dd">Latest - 2.0</a><br>
+<sub><a href="https://github.com/KRWCLASSIC/YellowToolbox/tree/5e21ad094f5a0c32f73e0afdb2d355f5a18386cc">1.9</a></sub><br>
 <sub><a href="https://github.com/KRWCLASSIC/YellowToolbox/tree/910a1313da33aa6cd79f7d4838fd600e6b69944e">1.8</a></sub><br>
 <sub><a href="https://github.com/KRWCLASSIC/YellowToolbox/tree/bfd789c3e0e9469d8c210ac35331394c98639fca">1.7</a></sub><br>
 <sub><a href="https://github.com/KRWCLASSIC/YellowToolbox/tree/5192439a3dbbce54edde1440fac6ceee54754c0f">1.6</a></sub><br>
