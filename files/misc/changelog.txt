@@ -1,12 +1,18 @@
 Plans:
+- Randomize file input on download to prevent some cheeky exploits (2.1)
 - Settings/Config command (Export, Import and Free Edit) (2.1) 
 - Improve ban command (Time bans etc.) (2.1)
 - Per-Command exclude list (2.1)
-- Better permission system (2.1)
-- Modifiable frame limit for video gifs (2.1)
+- Better permission system (2.2 GEOMETRY DASH REFRENCE?!)
+- Setup.py with many checking functions and config creator (gonna .gitignore config.toml)
+- Revamp update system
 
 2.1
 - Fixed message being removed with reaction gif feature
+- Modifiable frame limit for video gifs (config)
+- Commented some config values
+- Fixed for 100th time bot responding to not pinged messages (executes commands from pings not mentions)
+- Renamed confusing CMG variable in the config and actions.py
 
 2.0
 - Now russian roulette is actually accurate (1/6 chances) (will add option to modify the odds in settings)
@@ -22,7 +28,6 @@ Plans:
 - Temp with better cleanup logic
 - Fixed code spacing lol
 - Updated .gitignore with my new found knowledge
-# This update was finished on 28/12/2024 03:00AM but my lazy ass needs to manage time better so ill push it later
 
 1.9
 - Silented down all of the ffmpeg output (not really)

@@ -16,7 +16,7 @@ forcenick_enabled = config['forcenick']['enabled']
 nicktrack_enabled = config['nicktrack']['enabled']
 kys_attachment = config['media']['kys_attachment']
 tracked_user_ids = config['pingdm']['target_ids']
-cmg_enabled = config['gifs']['message_enabled']
+cmg_enabled = config['gifs']['cmg_enabled']
 target_ids = config['nicktrack']['target_ids']
 forcenick = str(config['forcenick']['nick'])
 enable_pingdm = config['pingdm']['enabled']
@@ -165,7 +165,7 @@ async def on_message(message):
             print_and_log(f"Tripple message got activated! | Server: {guild_name} | Channel: {channel_name} | User: {username}")
             consecutive_messages[user_id]['count'] = 0  # Reset the count after sending the attachment
 
-    if bot.user in message.mentions and message.author != bot.user:
+    if message.author != bot.user and message.content.startswith(f"<@{bot.user.id}>"):
         content = message.content.lower()
         if re.search(r'\bgif\b', content):
             await handle_gifs(message)
@@ -189,4 +189,4 @@ async def on_message(message):
             await send_help(message)
         elif re.search(r'\bquote\b', content):
             await handle_quote_command(message)
-        return  # Exit early if the bot is mentioned with its own commands
+        return

@@ -18,6 +18,7 @@ from imports.global_setup import bot, config
 
 # Some variables
 max_file_size = int(config['gifs']['max_file_size']) * 1024 * 1024
+gifs_frame_limit = int(config['gifs']['gifs_frame_limit'])
 telemetry_file_path = config['telemetry']['file_path']
 wrong_attachment = config['media']['wrong_attachment']
 quote_channel_id = int(config['quotes']['channel_id'])
@@ -560,7 +561,7 @@ def create_gif_from_video(video_path, output_gif_path):
         palettegen_command = [
             "ffmpeg",
             "-i", video_path,
-            "-vf", "fps=10,palettegen",
+            "-vf", f"fps={gifs_frame_limit},palettegen",
             palette_path,
             "-y"
         ]
@@ -574,7 +575,7 @@ def create_gif_from_video(video_path, output_gif_path):
             "ffmpeg",
             "-i", video_path,
             "-i", palette_path,
-            "-lavfi", "fps=10,paletteuse",
+            "-lavfi", f"fps={gifs_frame_limit},paletteuse",
             output_gif_path,
             "-y"
         ]
@@ -596,7 +597,7 @@ def compress_gif(gif_path):
         palettegen_command = [
             'ffmpeg',
             '-i', gif_path,
-            '-vf', 'fps=10,palettegen',
+            '-vf', f'fps={gifs_frame_limit},palettegen',
             palette_path,
             '-y'
         ]
@@ -610,7 +611,7 @@ def compress_gif(gif_path):
             'ffmpeg',
             '-i', gif_path,
             '-i', palette_path,
-            '-filter_complex', 'fps=10 [fg]; [fg][1:v] paletteuse',
+            '-filter_complex', f'fps={gifs_frame_limit} [fg]; [fg][1:v] paletteuse',
             compressed_path,
             '-y'
         ]

@@ -23,10 +23,11 @@ enabled = true
 # General gif settings
 [gifs]
 verbose_creation = false
-reaction_enabled = true
-message_enabled = true
-max_vid_length = 15
-max_file_size = 9
+reaction_enabled = true # When reacting to a message with :camera: emoji it will generate GIF
+gifs_frame_limit = 10 # In FPS
+max_vid_length = 15 # In seconds
+cmg_enabled = true # "Camera Message GIF" - When responding to a message with :camera: emoji it will generate GIF
+max_file_size = 9 # In MB (Before compression is applied)
 enabled = true
 
 # Russian Roulette settings
@@ -43,7 +44,7 @@ enabled = true
 # Enforces certain nick on all servers the bot is in
 [forcenick]
 enabled = false
-nick = "gay"
+nick = "Default"
 
 # Bloody marry like feature (attachment in [media] section)
 [triple_message]

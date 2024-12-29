@@ -4,7 +4,7 @@
 [![Static Badge](https://img.shields.io/badge/Code_Version--pre-2.1-yellow)](https://github.com/KRWCLASSIC/YellowToolbox)
 [![Static Badge](https://img.shields.io/badge/Maintainer-KRWCLASSIC-green)](https://github.com/KRWCLASSIC)
 
-[![Static Badge](https://img.shields.io/badge/Current_State-Alpha-red)](where_u_goin_dawg)
+[![Static Badge](https://img.shields.io/badge/Current_State-Beta-red)](where_u_goin_dawg)
 [![Security: bandit](https://img.shields.io/badge/Security-bandit-yellow.svg)](https://github.com/PyCQA/bandit)
 
 This bot is designed to enhance your Discord server experience with a variety of fun and useful features. Below, you'll find an overview of the features, setup instructions, and how to contribute to the project.
