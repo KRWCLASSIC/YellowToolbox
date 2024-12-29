@@ -6,6 +6,7 @@ Plans:
 - Better permission system (2.2 GEOMETRY DASH REFRENCE?!)
 - Setup.py with many checking functions and config creator (gonna .gitignore config.toml)
 - Revamp update system
+- Recomment my shit
 
 2.1
 - Fixed message being removed with reaction gif feature
