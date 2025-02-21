@@ -56,25 +56,39 @@ async def handle_gifs(message, credited_users=None):
 
                 # Process the file based on its type (image or video)
                 if attachment.filename.lower().endswith(('png', 'jpg', 'jpeg')):
-                    create_gif_from_image(temp_file_path, gif_path)
+                    try:
+                        create_gif_from_image(temp_file_path, gif_path)
+                        # Try to send the processed GIF
+                        try:
+                            message_sent = await message.channel.send(file=discord.File(gif_path))
+                            gif_link = message_sent.attachments[0].url
+                            clean_link = remove_query_params(gif_link)
+                        except discord.HTTPException as e:
+                            if e.code == 40005:  # Payload Too Large
+                                # Fallback: Just rename the original file to .gif
+                                fallback_gif = os.path.join('temp', attachment.filename.rsplit('.', 1)[0] + "_fallback.gif")
+                                shutil.copy2(temp_file_path, fallback_gif)
+                                message_sent = await message.channel.send(file=discord.File(fallback_gif))
+                                gif_link = message_sent.attachments[0].url
+                                clean_link = remove_query_params(gif_link)
+                            else:
+                                raise
+                    except Exception as e:
+                        print(f"Error processing image: {e}")
+                        continue
+
                 elif attachment.filename.lower().endswith(('mp4', 'mov', 'avi')):
                     # Validate the video duration
                     if not is_video_duration_valid(temp_file_path, max_duration=max_vid_length):
                         await message.reply(f"Video is too long. Please attach a video shorter than {max_vid_length} seconds.")
                         continue
                     create_gif_from_video(temp_file_path, gif_path)
+                    message_sent = await message.channel.send(file=discord.File(gif_path))
+                    gif_link = message_sent.attachments[0].url
+                    clean_link = remove_query_params(gif_link)
                 else:
                     await message.reply("Unsupported file type. Please attach an image or video.")
                     continue
-
-                # Compress the GIF if its size exceeds the limit
-                if os.path.exists(gif_path) and os.path.getsize(gif_path) > max_file_size:
-                    gif_path = compress_gif(gif_path)
-
-                # Send the created GIF
-                message_sent = await message.channel.send(file=discord.File(gif_path))
-                gif_link = message_sent.attachments[0].url
-                clean_link = remove_query_params(gif_link)
 
                 # Log details about the created GIF
                 guild_name = message.guild.name if message.guild else "None"

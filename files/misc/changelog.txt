@@ -14,6 +14,7 @@ Plans:
 - Commented some config values
 - Fixed for 100th time bot responding to not pinged messages (executes commands from pings not mentions)
 - Renamed confusing CMG variable in the config and actions.py
+- Fallback for error 40005 (only image gif's)
 
 2.0
 - Now russian roulette is actually accurate (1/6 chances) (will add option to modify the odds in settings)
