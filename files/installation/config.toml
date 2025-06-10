@@ -46,6 +46,10 @@ enabled = true
 enabled = false
 nick = "Default"
 
+# Scissors Paper Stone game settings
+[sps_game]
+rigged = false # Set to true to always make the bot win
+
 # Bloody marry like feature (attachment in [media] section)
 [triple_message]
 message = "krwawa kula"

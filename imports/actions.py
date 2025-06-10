@@ -189,4 +189,6 @@ async def on_message(message):
             await send_help(message)
         elif re.search(r'\bquote\b', content):
             await handle_quote_command(message)
+        elif re.search(r'\bsps\s+\w+', content):
+            await handle_sps_command(message)
         return

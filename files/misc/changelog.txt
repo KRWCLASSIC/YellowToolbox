@@ -1,4 +1,5 @@
 Plans:
+- Throw named error during 40005 and replace fallback with fix
 - Randomize file input on download to prevent some cheeky exploits (2.1)
 - Settings/Config command (Export, Import and Free Edit) (2.1) 
 - Improve ban command (Time bans etc.) (2.1)

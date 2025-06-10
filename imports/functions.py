@@ -33,6 +33,9 @@ admin_ids = config['settings']['admin_ids']
 rr_odds = int(config['r_roulette']['odds'])
 ban_list = config['files']['ban_list']
 
+# --- Scissors Paper Stone Game Handler ---
+sps_rigged = config.get('sps_game', {}).get('rigged', False)
+
 # Async Functions
 async def handle_gifs(message, credited_users=None):
     """Handles the GIF creation process triggered by a Discord command."""
@@ -461,6 +464,44 @@ async def handle_quote_command(message):
 
     # Optionally, delete the command message
     await message.delete()
+
+async def handle_sps_command(message):
+    if message.guild is None:
+        await message.reply("This command can only be used in a server.")
+        return
+
+    match = re.search(r'sps\s+(\w+)', message.content.lower())
+    if not match:
+        await message.reply("Usage: @Bot sps <scissors|paper|stone>")
+        return
+    user_choice = match.group(1)
+    choices = ['scissors', 'paper', 'stone']
+    if user_choice not in choices:
+        # Unknown option: bot always wins
+        bot_choice = random.choice(choices)
+        result = f"I win! You chose {user_choice}, I chose {bot_choice}."
+        await message.reply(result)
+        return
+    if sps_rigged:
+        # Bot always wins
+        win_map = {'scissors': 'stone', 'paper': 'scissors', 'stone': 'paper'}
+        bot_choice = win_map[user_choice]
+    else:
+        bot_choice = random.choice(choices)
+
+    # Determine winner
+    if user_choice == bot_choice:
+        result = "It's a draw!"
+    elif (
+        (user_choice == 'scissors' and bot_choice == 'paper') or
+        (user_choice == 'paper' and bot_choice == 'stone') or
+        (user_choice == 'stone' and bot_choice == 'scissors')
+    ):
+        result = f"You win! You chose {user_choice}, I chose {bot_choice}."
+    else:
+        result = f"I win! You chose {user_choice}, I chose {bot_choice}."
+
+    await message.reply(result)
 
 # Functions
 def restart():
